@@ -1,0 +1,27 @@
+<%= simple_form_for @quote do |f| %> 
+      <%= f.input :task_name, :label => t('Quote Task'), :input_html => {:value => InQuotex.task_class.find_by_id(@quote_task.id).name}  %>
+      <%= f.input :supplier_quote_num, :label => t('Supplier Quote#') %>
+      <%= f.input :supplier_contact, :label => t('Supplier Contact') %>
+      <%= f.input :qty, :label => t('Qty') %> 
+	  <%= f.input :unit, :label => t('Qty Unit'), :collection => @qty_unit %>
+	  <%= f.input :lead_time_day, :label => t('Lead Time(day)'), :placeholder => '0,1,2...' %> 
+	  <%= f.input :unit_price, :label => t('Unit Price'), :readonly => true %>
+	  <%= f.input :shipping_cost, :label => t('Shipping Cost'), :palceholder => 'x.xx or nothing' %>
+	  <%= f.input :other_cost, :label => t('Other Cost'), :palceholder => 'x.xx or nothing' %>
+	  <%= f.input :tax, :label => t('Tax'), :palceholder => 'x.xx or nothing' %>
+	  <%= f.input :good_for_day, :label => t('Good For(day)'), :placeholder => '0,1,2...' %>
+	  <%= f.input :quote_condition, :label => t('Quote Condition'), :input_html => {:rows => 4} %>
+	  <%= f.input :payment_term, :label => t('Payment Term'), :input_html => {:rows => 4} %>
+	  <%= f.input :supplier_id, :label => t('Supplier'), :collection => eval(InQuotex.return_suppliers), :include_blank => true %>
+	  <% if readonly?(@quote, 'void')%>
+        <%= f.input :void_noupdate, :label => t('Void'), :readonly => true, :required => false, :input_html => {:value => @quote.void} %>
+      <% else %>
+        <%= f.input :void, :label => t('Void'), :collection => [[t('Yes'), true], [t('No'), false]]%>
+      <% end %>
+	  <%= f.input :quoted_by_noupdate, :label => t('Quoted_by'), :readonly => true, :required => false, :input_html => {:value => @quote.quoted_by.name} %>
+	  <%= f.input :last_updated_by_noupdate, :label => t('Last Updated By'), :readonly => true, :input_html => {:value => @quote.last_updated_by.name} %>
+	  
+	  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
+	  <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %>  
+<% end %>  
+
