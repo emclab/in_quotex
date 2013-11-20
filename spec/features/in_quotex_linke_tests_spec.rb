@@ -58,7 +58,7 @@ describe "LinkeTests" do
     it "works! (now write some real specs)" do
       
       visit quotes_path
-      #save_and_open_page
+      save_and_open_page
       page.should have_content('Quotes')
       click_link 'Edit'
       page.should have_content('Update Quote')
@@ -68,6 +68,8 @@ describe "LinkeTests" do
       page.should have_content('Quote Info')
       click_link 'New Log'
       page.should have_content('Log')
+      
+      
     end
   end
 end

@@ -21,7 +21,7 @@ class CreateInQuotexQuotes < ActiveRecord::Migration
       t.string :supplier_contact
       t.boolean :void, :default => false
       t.integer :quoted_by_id
-
+      
       t.timestamps
     end
     

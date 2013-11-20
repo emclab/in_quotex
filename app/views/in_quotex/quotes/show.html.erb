@@ -1,70 +1,74 @@
+<% if false %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
 <div id="main_body">
 <h4><%=t('Quote Info') %></h4>
 
 <p>
-  <b><%= t('Quote Task') %></b>
+  <b><%= t('Quote Task') %>:</b>
   <%= InQuotex.task_class.find_by_id(@quote_task.id).name %>
 </p>
 <p>
-  <b><%= t('Quote Date') %></b>
+  <b><%= t('Quote Date') %>:</b>
   <%= @quote.created_at.strftime("%Y/%m/%d") %>
 </p>
 <p>
-  <b><%= t('Qty') %></b>
+  <b><%= t('Qty') %>:</b>
   <%= @quote.qty %><%= @quote.unit%>
 </p>
 <p>
-  <b><%= t('Unit Price') %></b>
+  <b><%= t('Unit Price') %>:</b>
   <%= @quote.unit_price %>/<%=@quote.unit %>
 </p>
 <p>
-  <b><%= t('Supplier Quote#') %></b>
+  <b><%= t('Supplier Quote#') %>:</b>
   <%= @quote.supplier_quote_num %>
 </p>
 <p>
-  <b><%= t('Supplier Contact')  %></b>
+  <b><%= t('Supplier Contact')  %>:</b>
   <%= @quote.supplier_contact %>
 </p>
 <p>
-  <b><%= t('Good For(day)') %></b>
+  <b><%= t('Good For(day)') %>:</b>
   <%= @quote.good_for_day %>
 </p>
 <p>
-  <b><%= t('lead_time_day') %></b>
+  <b><%= t('lead_time_day') %>:</b>
   <%= @quote.lead_time_day %>
 </p>
 <p>
-  <b><%= t('Quote Condition') %></b>
+  <b><%= t('Quote Condition') %>:</b>
   <%= @quote.quote_condition %>
 </p>
 <p>
-  <b><%= t('Payment Term') %></b>
+  <b><%= t('Payment Term') %>:</b>
   <%= @quote.payment_term %>
 </p>
 
 <p>
-  <b><%= t('Shipping Cost') %></b>
+  <b><%= t('Shipping Cost') %>:</b>
   <%= @quote.shipping_cost %>
 </p>
 <p>
-  <b><%= t('Tax') %></b>
+  <b><%= t('Tax') %>:</b>
   <%= @quote.tax %>
 </p>
 <p>
-  <b><%= t('Other Cost') %></b>
+  <b><%= t('Other Cost') %>:</b>
   <%= @quote.other_cost %>
 </p>
 <p>
-  <b><%= t('Void') %></b>
+  <b><%= t('Void') %>:</b>
   <%= @quote.void ? t('Yes') : t('No') %>
 </p>
 <p>
-  <b><%= t('Quoted By') %></b>
+  <b><%= t('Quoted By') %>:</b>
   <%= @quote.quoted_by.name %>
 </p>
 
 <p>
-  <b><%= t('Last Updated By') %></b>
+  <b><%= t('Last Updated By') %>:</b>
   <%= @quote.last_updated_by.name %>
 </p>
 <p>
@@ -78,3 +82,5 @@
   <%= link_to t('New Log'), SUBURI + commonx.new_log_path(:resource_id => @quote.id, :resource_name => params[:controller], :subaction => 'in_quote', :format => :js), :remote => true, 
                           :id => 'new_log_link', :class => BUTTONS_CLS['action'] if has_action_right?('create_in_quote', 'commonx/logs') %>    	
 </div>
+
+<% end %>

@@ -1,3 +1,7 @@
+<% if false %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
 <%= simple_form_for @quote do |f| %> 
       <%= f.input :task_name, :label => t('Quote Task'), :input_html => {:value => InQuotex.task_class.find_by_id(@quote_task.id).name}  %>
       <%= f.input :supplier_quote_num, :label => t('Supplier Quote#') %>
@@ -23,5 +27,7 @@
 	  
 	  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
 	  <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %>  
-<% end %>  
+<% end %> 
+
+<% end %> 
 

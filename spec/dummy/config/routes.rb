@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  get "user_menus/index"
-
   mount InQuotex::Engine => "/in_quotex"
   mount Authentify::Engine => "/authentify"
   mount Commonx::Engine => "/commonx"
