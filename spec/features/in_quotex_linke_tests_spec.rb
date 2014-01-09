@@ -39,6 +39,12 @@ describe "LinkeTests" do
       :sql_code => "")
       user_access = FactoryGirl.create(:user_access, :action => 'show', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "record.quoted_by_id == session[:user_id]")
+      ua1 = FactoryGirl.create(:user_access, :action => 'event_action', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
+      :sql_code => "")
+      ua1 = FactoryGirl.create(:user_access, :action => 'submit', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
+      :sql_code => "")
+      ua1 = FactoryGirl.create(:user_access, :action => 'review', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
+      :sql_code => "")
       user_access = FactoryGirl.create(:user_access, :action => 'create_in_quote', :resource => 'commonx_logs', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")
 
@@ -58,18 +64,28 @@ describe "LinkeTests" do
     it "works! (now write some real specs)" do
       
       visit quotes_path
-      save_and_open_page
+      #save_and_open_page
       page.should have_content('Quotes')
       click_link 'Edit'
+      #save_and_open_page
       page.should have_content('Update Quote')
+      
+      visit quotes_path
+      #save_and_open_page
+      click_link 'Submit'
+      save_and_open_page
+      fill_in 'quote_wf_comment', :with => 'this line tests workflow'
+      #save_and_open_page
+      click_button 'Save'
+      #save_and_open_page
+      
       visit quotes_path
       click_link @quote.id.to_s
-      #save_and_open_page
+      save_and_open_page
       page.should have_content('Quote Info')
+      page.should have_content('this line tests workflow')
       click_link 'New Log'
       page.should have_content('Log')
-      
-      
     end
   end
 end

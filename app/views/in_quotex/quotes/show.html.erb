@@ -59,8 +59,8 @@
   <%= @quote.other_cost %>
 </p>
 <p>
-  <b><%= t('Void') %>:</b>
-  <%= @quote.void ? t('Yes') : t('No') %>
+  <b><%= t('WF State') %>:</b>
+  <%= t(@quote.wf_state) if @quote.wf_state.present? %>
 </p>
 <p>
   <b><%= t('Quoted By') %>:</b>
@@ -70,6 +70,14 @@
 <p>
   <b><%= t('Last Updated By') %>:</b>
   <%= @quote.last_updated_by.name %>
+</p>
+<p>
+<% if @quote.wf_state.present? %>
+  <b><%=t('Workflow History')%>:</b>
+  <% StateMachineLogx::Log.where('resource_id = ? AND resource_string = ?', @quote.id, params[:controller]).order('created_at DESC').each do |t| %>
+    <li><%= t.created_at.strftime("%Y/%m/%d") %>,&nbsp; <%= t.action_by_name %>,&nbsp; <%=t(t.from)%>,&nbsp; <%=t(t.event.capitalize) %>,&nbsp; <%=t(t.to)%>,&nbsp;<%= t.comment %> </li>
+  <% end %>
+<% end %>	
 </p>
 <p>
   <b>LOG：</b>

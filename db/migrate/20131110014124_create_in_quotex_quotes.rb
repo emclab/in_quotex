@@ -4,8 +4,7 @@ class CreateInQuotexQuotes < ActiveRecord::Migration
       t.integer :task_id
       t.integer :last_updated_by_id
       t.string :wfid
-      t.text :comment
-      t.string :state
+      t.string :wf_state
       t.integer :qty
       t.string :unit
       t.decimal :unit_price, :precision => 10, :scale => 2
@@ -28,5 +27,6 @@ class CreateInQuotexQuotes < ActiveRecord::Migration
     add_index :in_quotex_quotes, :task_id
     add_index :in_quotex_quotes, :wfid
     add_index :in_quotex_quotes, :supplier_id
+    add_index :in_quotex_quotes, :wf_state
   end
 end

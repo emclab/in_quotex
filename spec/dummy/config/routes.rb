@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   mount Commonx::Engine => "/commonx"
   mount InitEventTaskx::Engine => '/event_taskx'
   mount Supplierx::Engine => '/supplierx'
+  mount StateMachineLogx::Engine => '/sm_log'
+  mount BizWorkflowx::Engine => '/biz_wf'
   
   resource :session
   

@@ -1,13 +1,37 @@
 module InQuotex
+  include Authentify::AuthentifyUtility
+  require 'workflow'
   class Quote < ActiveRecord::Base
-    attr_accessor :void_noupdate, :quoted_by_noupdate, :last_updated_by_noupdate, :task_name
-    attr_accessible :comment, :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :state, 
+
+    include Workflow
+    workflow_column :wf_state
+    
+    workflow do 
+      wf = Authentify::AuthentifyUtility.find_config_const('quotes_wf_pdef', 'in_quotex')
+      if Authentify::AuthentifyUtility.find_config_const('wf_pdef_in_config') == 'true' && wf.present?
+         #quotes is table name
+        eval(wf) if wf.present? && self.wf_state.present 
+      else   
+        state :new do
+          event :submit, :transitions_to => :being_reviewed
+        end
+        state :being_reviewed do
+          event :approve, :transitions_to => :approved
+          event :reject, :transitions_to => :rejected
+        end
+        state :approved
+        state :rejected
+      end
+    end
+       
+    attr_accessor :void_noupdate, :quoted_by_noupdate, :last_updated_by_noupdate, :task_name, :wf_comment, :id_noupdate
+    attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
                     :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :wfid, :void, :quoted_by_id,
                     :task_name,
                     :as => :role_new
-    attr_accessible :comment, :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :state, 
+    attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
                     :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :wfid, :void,
-                    :void_noupdate, :quoted_by_noupdate, :last_updated_by_noupdate, :task_name,
+                    :void_noupdate, :quoted_by_noupdate, :last_updated_by_noupdate, :task_name, :id_noupdate, :wf_comment,
                     :as => :role_update
                     
     belongs_to :task, :class_name => InQuotex.task_class.to_s
@@ -17,12 +41,32 @@ module InQuotex
    
     validates :unit_price, :task_id, :qty, :supplier_id, :presence => true,
                                      :numericality => {:greater_than => 0}
-                                
+    #example for workflow data valicdation
+    #validates :unit_price, :presence => true,
+                          # :numericality => {:greater_than => 0},
+                          # :if => "wf_state.present? && wf_state == find_config_const('validate_unit_price_state','in_quotex')" 
+                               
     validates :tax, :numericality => {:greater_than_or_equal_to => 0, :if => 'tax.present?'}
     validates :shipping_cost, :numericality => {:greater_than_or_equal_to => 0, :if => 'shipping_cost.present?'}
     validates :other_cost, :numericality => {:greater_than_or_equal_to => 0, :if => 'other_cost.present?'}
     validates :good_for_day, :numericality => {:greater_than_or_equal_to => 0, :if => 'good_for_day.present?'}
     validates :lead_time_day, :numericality => {:greater_than_or_equal_to => 0, :if => 'lead_time_day.present?'}
-    validates_presence_of :unit
+    validates_presence_of :unit 
+    
+    #for workflow input validation  
+    validate :validate_wf_input_data, :if => 'wf_state.present?' 
+    
+    def validate_wf_input_data
+      wf = Authentify::AuthentifyUtility.find_config_const('validation_quotes_' + self.wf_state, 'in_quotex')
+      if Authentify::AuthentifyUtility.find_config_const('wf_validate_in_config') == 'true' && wf.present? 
+        eval(wf) if wf.present?
+      else
+        #validate code here
+        #case wf_state
+        #when 'submit'
+        #end
+      end
+    end
+    
   end
 end

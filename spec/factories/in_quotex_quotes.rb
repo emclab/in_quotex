@@ -5,8 +5,8 @@ FactoryGirl.define do
     task_id 1
     last_updated_by_id 1
     wfid "MyString"
-    comment "MyText"
-    state "MyString"
+    #comment "MyText"
+    wf_state "new"
     qty 1
     unit "unit"
     unit_price "9.99"
