@@ -41,11 +41,6 @@ module InQuotex
    
     validates :unit_price, :task_id, :qty, :supplier_id, :presence => true,
                                      :numericality => {:greater_than => 0}
-    #example for workflow data valicdation
-    #validates :unit_price, :presence => true,
-                          # :numericality => {:greater_than => 0},
-                          # :if => "wf_state.present? && wf_state == find_config_const('validate_unit_price_state','in_quotex')" 
-                               
     validates :tax, :numericality => {:greater_than_or_equal_to => 0, :if => 'tax.present?'}
     validates :shipping_cost, :numericality => {:greater_than_or_equal_to => 0, :if => 'shipping_cost.present?'}
     validates :other_cost, :numericality => {:greater_than_or_equal_to => 0, :if => 'other_cost.present?'}
