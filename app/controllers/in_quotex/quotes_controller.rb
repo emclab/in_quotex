@@ -38,7 +38,7 @@ module InQuotex
       @title = t('Update Quote')
       @quote = InQuotex::Quote.find_by_id(params[:id])
       @erb_code = find_config_const('quote_edit_view', 'in_quotex')
-      if @quote.wf_state.present? && @quote.current_state != :new
+      if @quote.wf_state.present? && @quote.current_state != :fresh
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=NO Update. Record Being Processed!")
       end
     end
@@ -60,6 +60,11 @@ module InQuotex
       @erb_code = find_config_const('quote_show_view', 'in_quotex')
     end
   
+    def list_open_process  
+      index()
+      @quotes = return_open_process(@quotes, 2)
+    end
+    
     protected
     def load_parent_record
       @quote_task = InQuotex.task_class.find_by_id(params[:task_id]) if params[:task_id].present?

@@ -22,6 +22,26 @@ describe "LinkeTests" do
          'mini-link'    => mini_btn +  'btn btn-link'
         }
     before(:each) do
+      wf = "def submit
+          wf_common_action('init', 'being_reviewed', 'submit')
+        end   
+        def approve
+          wf_common_action('being_reviewed', 'approved', 'approve')
+        end    
+        def reject
+          wf_common_action('being_reviewed', 'rejected', 'reject')
+        end"
+      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_wf_action_def', :argument_value => wf)
+      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_submit', 
+                         :argument_value => "<%= f.input :tax, :label => t('Tax') %>")
+      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'validate_quote_submit', 
+                         :argument_value => "validates :tax, :presence => true
+                                             validates_numericality_of :tax, :greater_than_or_equal_to => 0
+                                           ")
+      FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_pdef_in_config', :argument_value => 'true')
+      FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_route_in_config', :argument_value => 'true')
+      FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_validate_in_config', :argument_value => 'true')
+      FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_list_open_process_in_day', :argument_value => '45')
       @pagination_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'pagination', :argument_value => 30)
       z = FactoryGirl.create(:zone, :zone_name => 'hq')
       type = FactoryGirl.create(:group_type, :name => 'employee')
@@ -32,6 +52,8 @@ describe "LinkeTests" do
       @u = FactoryGirl.create(:user, :user_levels => [ul], :user_roles => [ur])
 
       ua1 = FactoryGirl.create(:user_access, :action => 'index', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
+      :sql_code => "InQuotex::Quote.where(:void => false).order('created_at DESC')")
+      ua1 = FactoryGirl.create(:user_access, :action => 'list_open_process', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "InQuotex::Quote.where(:void => false).order('created_at DESC')")
       ua1 = FactoryGirl.create(:user_access, :action => 'create', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")
@@ -75,17 +97,23 @@ describe "LinkeTests" do
       click_link 'Submit'
       save_and_open_page
       fill_in 'quote_wf_comment', :with => 'this line tests workflow'
+      fill_in 'quote_tax', :with => '10.00'
       #save_and_open_page
       click_button 'Save'
-      #save_and_open_page
+      #
+      visit quotes_path
+      save_and_open_page
+      click_link 'Open Process'
+      page.should have_content('Quotes')
       
       visit quotes_path
       click_link @quote.id.to_s
-      save_and_open_page
+      #save_and_open_page
       page.should have_content('Quote Info')
       page.should have_content('this line tests workflow')
       click_link 'New Log'
       page.should have_content('Log')
+      
     end
   end
 end

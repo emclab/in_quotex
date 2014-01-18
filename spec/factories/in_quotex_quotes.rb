@@ -6,7 +6,7 @@ FactoryGirl.define do
     last_updated_by_id 1
     wfid "MyString"
     #comment "MyText"
-    wf_state "new"
+    wf_state "fresh"
     qty 1
     unit "unit"
     unit_price "9.99"

@@ -6,13 +6,14 @@ module InQuotex
     include Workflow
     workflow_column :wf_state
     
-    workflow do 
-      wf = Authentify::AuthentifyUtility.find_config_const('quotes_wf_pdef', 'in_quotex')
+    workflow do
+      #self.to_s = 'EngineName::TableName'    ex, 'InQuotex::Quote'
+      wf = Authentify::AuthentifyUtility.find_config_const('quote_wf_pdef', 'in_quotex')
       if Authentify::AuthentifyUtility.find_config_const('wf_pdef_in_config') == 'true' && wf.present?
          #quotes is table name
         eval(wf) if wf.present? && self.wf_state.present 
       else   
-        state :new do
+        state :fresh do
           event :submit, :transitions_to => :being_reviewed
         end
         state :being_reviewed do
@@ -52,7 +53,7 @@ module InQuotex
     validate :validate_wf_input_data, :if => 'wf_state.present?' 
     
     def validate_wf_input_data
-      wf = Authentify::AuthentifyUtility.find_config_const('validation_quotes_' + self.wf_state, 'in_quotex')
+      wf = Authentify::AuthentifyUtility.find_config_const('validation_quote_' + self.wf_state, 'in_quotex')
       if Authentify::AuthentifyUtility.find_config_const('wf_validate_in_config') == 'true' && wf.present? 
         eval(wf) if wf.present?
       else

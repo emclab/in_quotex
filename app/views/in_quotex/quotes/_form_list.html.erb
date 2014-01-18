@@ -44,7 +44,7 @@
 			<td><%= prt(r, 'quoted_by.name') %></td> 
 			<td><%= prt(r, 'last_updated_by.name') %></td>    
 			<td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{edit_quote_path(r)}", :class => BUTTONS_CLS['action']  if has_action_right?('update', params[:controller], r) %></td>
-			<td><%= link_to t('Submit'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'submit', :resource_id => r.id, :resource_string => params[:controller])}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'new' && has_action_right?('submit', params[:controller], r) %></td>
+			<td><%= link_to t('Submit'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'submit', :resource_id => r.id, :resource_string => params[:controller])}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'fresh' && has_action_right?('submit', params[:controller], r) %></td>
 			<td><%= link_to t('Approve'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'approve', :resource_id => r.id, :resource_string => params[:controller])}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'being_reviewed' && has_action_right?('review', params[:controller], r) %></td>
 			<td><%= link_to t('Reject'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'reject', :resource_id => r.id, :resource_string => params[:controller])}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'being_reviewed' && has_action_right?('review', params[:controller], r) %></td>
 		  </tr>
@@ -57,6 +57,8 @@
 	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	    	<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action']  %>
 	    	<%= link_to t('New Quote'), SUBURI + "/authentify/view_handler?index=1&url=#{new_quote_path(:task_id => @quote_task.id, :parent_record_id => @quote_task.id, :parent_resource => InQuotex.task_class.to_s.underscore.pluralize)}", :class => BUTTONS_CLS['action']  if @quote_task && has_action_right?('create', params[:controller], @quote_task) %>
+	    	<%= link_to t('Open Process'), SUBURI + "/authentify/view_handler?index=1&url=#{list_open_process_quotes_path(:task_id => @quote_task.id, :parent_record_id => @quote_task.id, :parent_resource => InQuotex.task_class.to_s.underscore.pluralize)}", :class => BUTTONS_CLS['action']  if @quote_task && has_action_right?('list_open_process', params[:controller], @quote_task) %>
+	    	<%= link_to t('Open Process'), SUBURI + "/authentify/view_handler?index=1&url=#{list_open_process_quotes_path}", :class => BUTTONS_CLS['action']  if @quote_task.nil? && has_action_right?('list_open_process', params[:controller], @quote_task) %>
 	    </th>
 	  </tr>
 	</table>
