@@ -20,6 +20,7 @@
 			<th><%= t('Last Updated By') %></th>
 			<th></th>
 			<th></th>
+			<th></th>
 		</tr>
 		<% models.each do |r| %>
 		  <tr>
@@ -40,10 +41,10 @@
 			<td><%= prt(r, :quote_condition) %></td>
 			<td><%= prt(r, :good_for_day) %></td>
 			<td><%= prt(r, 'supplier.name') %></td>
-			<td><%= t(prt(r, :wf_state).capitalize) if r.wf_state.present? %></td>
+			<td><%= t(prt(r, :wf_state).humanize) if r.wf_state.present? %></td>
 			<td><%= prt(r, 'quoted_by.name') %></td> 
 			<td><%= prt(r, 'last_updated_by.name') %></td>    
-			<td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{edit_quote_path(r)}", :class => BUTTONS_CLS['action']  if has_action_right?('update', params[:controller], r) %></td>
+			<td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{edit_quote_path(r)}", :class => BUTTONS_CLS['action']  if (r.wf_state.nil? or r.wf_state == 'fresh') && has_action_right?('update', params[:controller], r) %></td>
 			<td><%= link_to t('Submit'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'submit', :resource_id => r.id, :resource_string => params[:controller])}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'fresh' && has_action_right?('submit', params[:controller], r) %></td>
 			<td><%= link_to t('Approve'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'approve', :resource_id => r.id, :resource_string => params[:controller])}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'being_reviewed' && has_action_right?('review', params[:controller], r) %></td>
 			<td><%= link_to t('Reject'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'reject', :resource_id => r.id, :resource_string => params[:controller])}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'being_reviewed' && has_action_right?('review', params[:controller], r) %></td>

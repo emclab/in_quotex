@@ -14,9 +14,9 @@ module InQuotex
         eval(wf) if wf.present? && self.wf_state.present 
       else   
         state :fresh do
-          event :submit, :transitions_to => :being_reviewed
+          event :submit, :transitions_to => :reviewing
         end
-        state :being_reviewed do
+        state :reviewing do
           event :approve, :transitions_to => :approved
           event :reject, :transitions_to => :rejected
         end

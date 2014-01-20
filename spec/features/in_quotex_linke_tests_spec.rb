@@ -23,13 +23,13 @@ describe "LinkeTests" do
         }
     before(:each) do
       wf = "def submit
-          wf_common_action('init', 'being_reviewed', 'submit')
+          wf_common_action('fresh', 'reviewing', 'submit')
         end   
         def approve
-          wf_common_action('being_reviewed', 'approved', 'approve')
+          wf_common_action('reviewing', 'approved', 'approve')
         end    
         def reject
-          wf_common_action('being_reviewed', 'rejected', 'reject')
+          wf_common_action('reviewing', 'rejected', 'reject')
         end"
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_wf_action_def', :argument_value => wf)
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_submit', 
@@ -64,8 +64,6 @@ describe "LinkeTests" do
       ua1 = FactoryGirl.create(:user_access, :action => 'event_action', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")
       ua1 = FactoryGirl.create(:user_access, :action => 'submit', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
-      :sql_code => "")
-      ua1 = FactoryGirl.create(:user_access, :action => 'review', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")
       user_access = FactoryGirl.create(:user_access, :action => 'create_in_quote', :resource => 'commonx_logs', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")

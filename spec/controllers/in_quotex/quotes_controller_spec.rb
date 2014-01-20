@@ -11,13 +11,13 @@ module InQuotex
     
     before(:each) do
       wf = "def submit
-          wf_common_action('new', 'being_reviewed', 'submit')
+          wf_common_action('fresh', 'reviewing', 'submit')
         end   
         def approve
-          wf_common_action('being_reviewed', 'approved', 'approve')
+          wf_common_action('reviewing', 'approved', 'approve')
         end    
         def reject
-          wf_common_action('being_reviewed', 'rejected', 'reject')
+          wf_common_action('reviewing', 'rejected', 'reject')
         end"
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_wf_action_def', :argument_value => wf)
       FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_pdef_in_config', :argument_value => 'true')
@@ -113,7 +113,7 @@ module InQuotex
         :sql_code => "")
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
-        q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'being_reviewed')  
+        q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'reviewing')  
         get 'edit', {:use_route => :in_quotex, :id => q.id}
         response.should redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=NO Update. Record Being Processed!")
       end
@@ -159,8 +159,8 @@ module InQuotex
         :sql_code => "InQuotex::Quote.where(:void => false).order('created_at DESC')")
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
-        q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task.id, :created_at => 50.days.ago, :wf_state => 'init')
-        q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'being_reviewed')
+        q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task.id, :created_at => 50.days.ago, :wf_state => 'fresh')
+        q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'reviewing')
         q2 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'fresh')
         q3 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'rejected', :wfid => 'rejected')  #wf_state can't be what was defined.
         get 'list_open_process', {:use_route => :in_quotex}
