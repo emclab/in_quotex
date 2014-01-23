@@ -1,6 +1,7 @@
 InQuotex::Engine.routes.draw do
   resources :quotes do
-    workflow_routes = Authentify::AuthentifyUtility.find_config_const('quote_workflow_routes', 'in_quotex')
+#=begin
+    workflow_routes = Authentify::AuthentifyUtility.find_config_const('quote_wf_route', 'in_quotex')
     if Authentify::AuthentifyUtility.find_config_const('wf_route_in_config') == 'true' && workflow_routes.present?
       eval(workflow_routes) 
     else
@@ -15,7 +16,7 @@ InQuotex::Engine.routes.draw do
         get :list_open_process
       end
     end
-    
+#=end    
   end
 
   root :to => 'quotes#index'
