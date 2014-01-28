@@ -4,7 +4,7 @@ InQuotex::Engine.routes.draw do
     workflow_routes = Authentify::AuthentifyUtility.find_config_const('quote_wf_route', 'in_quotex')
     if Authentify::AuthentifyUtility.find_config_const('wf_route_in_config') == 'true' && workflow_routes.present?
       eval(workflow_routes) 
-    else
+    elsif Rails.env.test?  #for rsepc. routes loaded before FactoryGirl.
       member do
         get :event_action
         put :accept

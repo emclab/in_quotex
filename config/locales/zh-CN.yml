@@ -61,6 +61,7 @@ zh-CN:
   Approvee : '批准'
   Reject : '否决'
   Approve : '批准'
-  Fresh : '待审'
+  Initial State : '待审'
+  Initial state : '待审'
   Open Process : '待处理流程'
   Reviewing : '审批中'

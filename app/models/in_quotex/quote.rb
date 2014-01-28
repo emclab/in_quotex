@@ -12,8 +12,8 @@ module InQuotex
       if Authentify::AuthentifyUtility.find_config_const('wf_pdef_in_config') == 'true' && wf.present?
          #quotes is table name
         eval(wf) if wf.present? && self.wf_state.present 
-      else   
-        state :fresh do
+      elsif Rails.env.test? #for rspec. loaded before FactoryGirl.
+        state :initial_state do
           event :submit, :transitions_to => :reviewing
         end
         state :reviewing do
@@ -56,7 +56,7 @@ module InQuotex
       wf = Authentify::AuthentifyUtility.find_config_const('validation_quote_' + self.wf_state, 'in_quotex')
       if Authentify::AuthentifyUtility.find_config_const('wf_validate_in_config') == 'true' && wf.present? 
         eval(wf) if wf.present?
-      else
+      #else
         #validate code here
         #case wf_state
         #when 'submit'

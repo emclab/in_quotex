@@ -23,7 +23,7 @@ describe "LinkeTests" do
         }
     before(:each) do
       wf = "def submit
-          wf_common_action('fresh', 'reviewing', 'submit')
+          wf_common_action('initial_state', 'reviewing', 'submit')
         end   
         def approve
           wf_common_action('reviewing', 'approved', 'approve')
@@ -32,7 +32,8 @@ describe "LinkeTests" do
           wf_common_action('reviewing', 'rejected', 'reject')
         end"
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_wf_action_def', :argument_value => wf)
-      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_submit', 
+      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_wf_final_state_string', :argument_value => 'rejected, approved')
+      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_submit_inline', 
                          :argument_value => "<%= f.input :tax, :label => t('Tax') %>")
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'validate_quote_submit', 
                          :argument_value => "validates :tax, :presence => true
@@ -71,7 +72,7 @@ describe "LinkeTests" do
       @q_task = FactoryGirl.create(:init_event_taskx_event_task)
       @q_task1 = FactoryGirl.create(:init_event_taskx_event_task, :name => 'a new name')
       @supplier = FactoryGirl.create(:supplierx_supplier)
-      @quote = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :supplier_id => @supplier.id)
+      @quote = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :supplier_id => @supplier.id, :wf_state => nil)
       log = FactoryGirl.create(:commonx_log, :resource_id => @quote.id, :resource_name => 'in_quotex_quotes')
       
       visit '/'
@@ -84,7 +85,7 @@ describe "LinkeTests" do
     it "works! (now write some real specs)" do
       
       visit quotes_path
-      #save_and_open_page
+      save_and_open_page
       page.should have_content('Quotes')
       click_link 'Edit'
       #save_and_open_page
