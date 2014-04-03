@@ -69,8 +69,8 @@ describe "LinkeTests" do
       user_access = FactoryGirl.create(:user_access, :action => 'create_in_quote', :resource => 'commonx_logs', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")
 
-      @q_task = FactoryGirl.create(:init_event_taskx_event_task)
-      @q_task1 = FactoryGirl.create(:init_event_taskx_event_task, :name => 'a new name')
+      @q_task = FactoryGirl.create(:event_taskx_event_task)
+      @q_task1 = FactoryGirl.create(:event_taskx_event_task, :name => 'a new name')
       @supplier = FactoryGirl.create(:supplierx_supplier)
       @quote = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :supplier_id => @supplier.id, :wf_state => nil)
       log = FactoryGirl.create(:commonx_log, :resource_id => @quote.id, :resource_name => 'in_quotex_quotes')

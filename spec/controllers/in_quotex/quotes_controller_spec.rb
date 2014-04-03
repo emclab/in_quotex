@@ -35,8 +35,8 @@ module InQuotex
       ul = FactoryGirl.build(:user_level, :sys_user_group_id => ug.id)
       @u = FactoryGirl.create(:user, :user_levels => [ul], :user_roles => [ur])
       
-      @q_task = FactoryGirl.create(:init_event_taskx_event_task)
-      @q_task1 = FactoryGirl.create(:init_event_taskx_event_task, :name => 'a new name')
+      @q_task = FactoryGirl.create(:event_taskx_event_task)
+      @q_task1 = FactoryGirl.create(:event_taskx_event_task, :name => 'a new name')
       @supplier = FactoryGirl.create(:supplierx_supplier)
       
     end
@@ -63,6 +63,19 @@ module InQuotex
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task.id)
         q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
         get 'index', {:use_route => :in_quotex, :task_id => @q_task1.id}
+        assigns(:quotes).should =~ [q1]
+      end
+      
+      it "should only return the quotes which belongs to resource_id/resource_string" do       
+        user_access = FactoryGirl.create(:user_access, :action => 'index', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
+        :sql_code => "InQuotex::Quote.where(:void => false).order('created_at DESC')")
+        session[:user_id] = @u.id
+        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
+        q_task = FactoryGirl.create(:event_taskx_event_task, :resource_id => 1, :resource_string => 'rfqx/rfqs')
+        q_task1 = FactoryGirl.create(:event_taskx_event_task, :resource_id => 1, :resource_string => 'quotex/quotes')
+        q = FactoryGirl.create(:in_quotex_quote, :task_id => q_task.id)
+        q1 = FactoryGirl.create(:in_quotex_quote, :task_id => q_task1.id)
+        get 'index', {:use_route => :in_quotex, :resource_id => q_task1.resource_id, :resource_string => 'quotex/quotes'}
         assigns(:quotes).should =~ [q1]
       end
     end
