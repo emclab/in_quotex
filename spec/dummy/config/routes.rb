@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   mount Supplierx::Engine => '/supplierx'
   mount StateMachineLogx::Engine => '/sm_log'
   mount BizWorkflowx::Engine => '/biz_wf'
+  mount Searchx::Engine => '/search'
+  mount ExtConstructionProjectx::Engine => '/project'
   mount EventTaskx::Engine => '/event_task'
   
   resource :session

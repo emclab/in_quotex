@@ -4,6 +4,9 @@
 <% else %>
 <%= simple_form_for @quote do |f| %> 
       <%= f.input :task_name, :label => t('Quote Task'), :input_html => {:value => InQuotex.task_class.find_by_id(@quote_task.id).name}  %>
+      <%= f.input :quote_date, :label => t('Quote Date'), :as => :string %>
+      <%= f.input :product_name, :label => t('Product Name'), :readonly => readonly?(@quote, 'product_name') %>
+      <%= f.input :product_spec, :label => t('Product Spec'), :input_html => {:rows => 2}, :readonly => readonly?(@quote, 'product_spec') %>
       <%= f.input :supplier_quote_num, :label => t('Supplier Quote#') %>
       <%= f.input :supplier_contact, :label => t('Supplier Contact') %>
       <%= f.input :qty, :label => t('Qty') %> 
@@ -22,7 +25,7 @@
       <% else %>
         <%= f.input :void, :label => t('Void'), :collection => [[t('Yes'), true], [t('No'), false]]%>
       <% end %>
-	  <%= f.input :quoted_by_noupdate, :label => t('Quoted_by'), :readonly => true, :required => false, :input_html => {:value => @quote.quoted_by.name} %>
+	  <%= f.input :entered_by_noupdate, :label => t('Entered_by'), :readonly => true, :required => false, :input_html => {:value => @quote.entered_by.name} %>
 	  <%= f.input :last_updated_by_noupdate, :label => t('Last Updated By'), :readonly => true, :input_html => {:value => @quote.last_updated_by.name} %>
 	  
 	  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>

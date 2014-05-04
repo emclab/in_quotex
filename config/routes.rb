@@ -1,5 +1,11 @@
 InQuotex::Engine.routes.draw do
   resources :quotes do
+    collection do
+      get :search
+      put :search_results
+      #get :stats
+      #put :stats_results    
+    end
 #=begin
     workflow_routes = Authentify::AuthentifyUtility.find_config_const('quote_wf_route', 'in_quotex')
     if Authentify::AuthentifyUtility.find_config_const('wf_route_in_config') == 'true' && workflow_routes.present?

@@ -25,8 +25,8 @@ describe "LinkeTests" do
       wf = "def submit
           wf_common_action('initial_state', 'reviewing', 'submit')
         end   
-        def approve
-          wf_common_action('reviewing', 'approved', 'approve')
+        def accept
+          wf_common_action('reviewing', 'accepted', 'accept')
         end    
         def reject
           wf_common_action('reviewing', 'rejected', 'reject')
@@ -39,11 +39,19 @@ describe "LinkeTests" do
                          :argument_value => "validates :tax, :presence => true
                                              validates_numericality_of :tax, :greater_than_or_equal_to => 0
                                            ")
+      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_accept_inline', 
+                         :argument_value => "<%= f.input :accepted_date, :label => t('Accept Date'), :as => :string %>
+                                             <%= f.input :accepted, :as => :hidden, :input_html => {:value => true} %>
+                                           ")
+      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'validate_accept_submit', 
+                         :argument_value => "validates :accepted_date, :accepted, :presence => true
+                                           ")
       FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_pdef_in_config', :argument_value => 'true')
       FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_route_in_config', :argument_value => 'true')
       FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_validate_in_config', :argument_value => 'true')
       FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_list_open_process_in_day', :argument_value => '45')
       @pagination_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'pagination', :argument_value => 30)
+      engine_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'piece_unit', :argument_value => "t('set'), t('piece')")
       z = FactoryGirl.create(:zone, :zone_name => 'hq')
       type = FactoryGirl.create(:group_type, :name => 'employee')
       ug = FactoryGirl.create(:sys_user_group, :user_group_name => 'ceo', :group_type_id => type.id, :zone_id => z.id)
@@ -61,10 +69,14 @@ describe "LinkeTests" do
       ua1 = FactoryGirl.create(:user_access, :action => 'update', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")
       user_access = FactoryGirl.create(:user_access, :action => 'show', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
-      :sql_code => "record.quoted_by_id == session[:user_id]")
+      :sql_code => "record.entered_by_id == session[:user_id]")
       ua1 = FactoryGirl.create(:user_access, :action => 'event_action', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")
       ua1 = FactoryGirl.create(:user_access, :action => 'submit', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
+      :sql_code => "")
+      ua1 = FactoryGirl.create(:user_access, :action => 'accept', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
+      :sql_code => "")
+      ua1 = FactoryGirl.create(:user_access, :action => 'reject', :resource => 'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")
       user_access = FactoryGirl.create(:user_access, :action => 'create_in_quote', :resource => 'commonx_logs', :role_definition_id => @role.id, :rank => 1,
       :sql_code => "")
@@ -72,7 +84,7 @@ describe "LinkeTests" do
       @q_task = FactoryGirl.create(:event_taskx_event_task)
       @q_task1 = FactoryGirl.create(:event_taskx_event_task, :name => 'a new name')
       @supplier = FactoryGirl.create(:supplierx_supplier)
-      @quote = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :supplier_id => @supplier.id, :wf_state => nil)
+      @quote = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :supplier_id => @supplier.id, :unit => 'set')
       log = FactoryGirl.create(:commonx_log, :resource_id => @quote.id, :resource_name => 'in_quotex_quotes')
       
       visit '/'
@@ -88,9 +100,53 @@ describe "LinkeTests" do
       save_and_open_page
       page.should have_content('Quotes')
       click_link 'Edit'
-      #save_and_open_page
       page.should have_content('Update Quote')
+      save_and_open_page
+      fill_in 'quote_product_name', :with => 'a new name'
+      fill_in 'quote_product_spec', :with => 'tree1234'
+      fill_in 'quote_unit_price', :with => 100
+      select('piece', :from => 'quote_unit')
+      click_button 'Save'
+      save_and_open_page
+      #bad data
+      visit quotes_path
+      click_link 'Edit'
+      fill_in 'quote_product_name', :with => 'a new name'
+      fill_in 'quote_product_spec', :with => 'tree1234'
+      fill_in 'quote_unit_price', :with => 0
+      click_button 'Save'
+      save_and_open_page
       
+      visit quotes_path
+      click_link @quote.id.to_s
+      #save_and_open_page
+      page.should have_content('Quote Info')
+      #page.should have_content('this line tests workflow')
+      click_link 'New Log'
+      page.should have_content('Log')
+      
+      visit new_quote_path(:task_id => @q_task.id, :project_id => 1)
+      page.should have_content('New Quote')
+      fill_in 'quote_product_name', :with => 'a new name'
+      fill_in 'quote_product_spec', :with => 'tree1234'
+      fill_in 'quote_unit_price', :with => 100
+      fill_in 'quote_qty', :with => 200
+      select('piece', :from => 'quote_unit')
+      click_button 'Save'
+      save_and_open_page
+      #bad data
+      visit new_quote_path(:task_id => @q_task.id, :project_id => 1)
+      page.should have_content('New Quote')
+      fill_in 'quote_product_name', :with => ''
+      fill_in 'quote_product_spec', :with => 'tree1234'
+      fill_in 'quote_unit_price', :with => 0
+      fill_in 'quote_qty', :with => 200
+      select('piece', :from => 'quote_unit')
+      click_button 'Save'
+      save_and_open_page
+    end
+    
+    it "should work for workflow" do
       visit quotes_path
       #save_and_open_page
       click_link 'Submit'
@@ -101,18 +157,30 @@ describe "LinkeTests" do
       click_button 'Save'
       #
       visit quotes_path
-      save_and_open_page
-      click_link 'Open Process'
-      page.should have_content('Quotes')
-      
-      visit quotes_path
       click_link @quote.id.to_s
       #save_and_open_page
       page.should have_content('Quote Info')
       page.should have_content('this line tests workflow')
-      click_link 'New Log'
-      page.should have_content('Log')
+      #accept quote
+      visit quotes_path
+      #save_and_open_page
+      click_link 'Accept Quote'
+      save_and_open_page
+      fill_in 'quote_wf_comment', :with => 'this quote was accepted'
+      fill_in 'quote_accepted_date', :with => Date.today - 2.days
+      click_button 'Save'
+      visit quotes_path
+      click_link @quote.id.to_s
+      save_and_open_page
+      page.should have_content('this quote was accepted')
+      page.should have_content((Date.today - 2.days).strftime("%Y/%m/%d"))
       
+      visit quotes_path
+      save_and_open_page
+      click_link 'Open Process'
+      page.should have_content('Quotes')
+            
     end
+    
   end
 end

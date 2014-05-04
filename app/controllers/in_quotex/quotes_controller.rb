@@ -25,11 +25,12 @@ module InQuotex
     def create
       @quote = InQuotex::Quote.new(params[:quote], :as => :role_new)
       @quote.last_updated_by_id = session[:user_id]
-      @quote.quoted_by_id = session[:user_id]
+      @quote.entered_by_id = session[:user_id]
       #@quote.task_id = @quote_task.id
       if @quote.save
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
       else
+        @project_id = params[:quote][:project_id]
         @quote_task = InQuotex.task_class.find_by_id(params[:quote][:task_id]) if params[:quote].present? && params[:quote][:task_id].present?
         flash[:notice] = t('Data Error. Not Saved!')
         render 'new'
@@ -39,6 +40,7 @@ module InQuotex
     def edit
       @title = t('Update Quote')
       @quote = InQuotex::Quote.find_by_id(params[:id])
+      @qty_unit = find_config_const('piece_unit').split(',').map(&:strip)
       @erb_code = find_config_const('quote_edit_view', 'in_quotex')
       if @quote.wf_state.present? && @quote.current_state != :initial_state
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=NO Update. Record Being Processed!")
@@ -51,6 +53,7 @@ module InQuotex
       if @quote.update_attributes(params[:quote], :as => :role_update)
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
       else
+        @qty_unit = find_config_const('piece_unit').split(',').map(&:strip)
         flash[:notice] = t('Data Error. Not Updated!')
         render 'edit'
       end
@@ -69,6 +72,7 @@ module InQuotex
     
     protected
     def load_parent_record
+      @project_id = params[:project_id]
       @quote_task = InQuotex.task_class.find_by_id(params[:task_id]) if params[:task_id].present?
       @quote_task = InQuotex.task_class.find_by_id(InQuotex.task_class.find_by_id(params[:id]).id) if params[:id].present?
     end

@@ -14,6 +14,14 @@
   <%= @quote.created_at.strftime("%Y/%m/%d") %>
 </p>
 <p>
+  <b><%= t('Product Name') %>:</b>
+  <%= @quote.product_name %>
+</p>
+<p>
+  <b><%= t('Product Spec') %>:</b>
+  <%= @quote.product_spec %>
+</p>
+<p>
   <b><%= t('Qty') %>:</b>
   <%= @quote.qty %><%= @quote.unit%>
 </p>
@@ -59,12 +67,20 @@
   <%= @quote.other_cost %>
 </p>
 <p>
-  <b><%= t('WF State') %>:</b>
-  <%= t(@quote.wf_state) if @quote.wf_state.present? %>
+  <b><%= t('Accepted') %></b>
+  <%= @quote.accepted ? t('Yes') : t('No') %>
 </p>
 <p>
-  <b><%= t('Quoted By') %>:</b>
-  <%= @quote.quoted_by.name %>
+  <b><%= t('Accepte Date') %></b>
+  <%= @quote.accepted_date.strftime("%Y/%m/%d") if @quote.accepted_date.present? %>
+</p>
+<p>
+  <b><%= t('WF State') %>:</b>
+  <%= t(@quote.wf_state.humanize.titleize) if @quote.wf_state.present? %>
+</p>
+<p>
+  <b><%= t('Entered By') %>:</b>
+  <%= @quote.entered_by.name %>
 </p>
 
 <p>

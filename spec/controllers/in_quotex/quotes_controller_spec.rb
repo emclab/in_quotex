@@ -160,10 +160,10 @@ module InQuotex
     describe "GET 'show'" do
       it "returns http success" do
         user_access = FactoryGirl.create(:user_access, :action => 'show', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
-        :sql_code => "record.quoted_by_id == session[:user_id]")
+        :sql_code => "record.entered_by_id == session[:user_id]")
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
-        q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :quoted_by_id => @u.id, :supplier_id => @supplier.id)
+        q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :entered_by_id => @u.id, :supplier_id => @supplier.id)
         get 'show', {:use_route => :in_quotex, :id => q.id }
         response.should be_success
       end
@@ -179,7 +179,7 @@ module InQuotex
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task.id, :created_at => 50.days.ago, :wf_state => 'initial_state')
         q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'reviewing')
         q2 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'initial_state')
-        q3 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'rejected', :wfid => 'rejected')  #wf_state can't be what was defined.
+        q3 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'rejected')  #wf_state can't be what was defined.
         get 'list_open_process', {:use_route => :in_quotex}
         assigns(:quotes).should =~ [q1, q2]
       end

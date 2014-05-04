@@ -3,10 +3,10 @@
 FactoryGirl.define do
   factory :in_quotex_quote, :class => 'InQuotex::Quote' do
     task_id 1
+    product_name 'quoted product name'
+    product_spec 'axsd1233'
     last_updated_by_id 1
-    wfid "MyString"
-    #comment "MyText"
-    wf_state "initial_state"
+    wf_state "MyString"
     qty 1
     unit "unit"
     unit_price "9.99"
@@ -21,6 +21,8 @@ FactoryGirl.define do
     supplier_quote_num "My quote # String"
     supplier_contact "My name String"
     void false
-    quoted_by_id 1
+    entered_by_id 1
+    project_id 1
+    quote_date Date.today.to_s
   end
 end
