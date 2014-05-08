@@ -25,7 +25,7 @@ module InQuotex
       end
     end
        
-    attr_accessor :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :wf_comment, :id_noupdate, :project_name
+    attr_accessor :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :wf_comment, :id_noupdate, :project_name, :wf_state_noupdate, :wf_event
     attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
                     :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :entered_by_id,
                     :task_name, :project_id, :quote_date, :product_name, :product_spec,
@@ -33,7 +33,7 @@ module InQuotex
     attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
                     :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :accepted, :accepted_date,
                     :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :id_noupdate, :wf_comment, :project_name, :quote_date,
-                    :product_name, :product_spec,
+                    :product_name, :product_spec, :wf_state_noupdate,
                     :as => :role_update
     
     attr_accessor :project_id_s, :start_date_s, :end_date_s, :customer_id_s, :void_s, :accepted_s, :time_frame_s, :supplier_id_s, :entered_by_id_s, :product_name_s
@@ -61,7 +61,7 @@ module InQuotex
     validate :validate_wf_input_data, :if => 'wf_state.present?' 
     
     def validate_wf_input_data
-      wf = Authentify::AuthentifyUtility.find_config_const('validation_quote_' + self.wf_state, 'in_quotex')
+      wf = Authentify::AuthentifyUtility.find_config_const('validate_quote_' + self.wf_event, 'in_quotex') if self.wf_event.present?
       if Authentify::AuthentifyUtility.find_config_const('wf_validate_in_config') == 'true' && wf.present? 
         eval(wf) 
       end

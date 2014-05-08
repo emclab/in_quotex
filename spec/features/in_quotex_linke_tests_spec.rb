@@ -36,15 +36,14 @@ describe "LinkeTests" do
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_submit_inline', 
                          :argument_value => "<%= f.input :tax, :label => t('Tax') %>")
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'validate_quote_submit', 
-                         :argument_value => "validates :tax, :presence => true
-                                             validates_numericality_of :tax, :greater_than_or_equal_to => 0
-                                           ")
+                         :argument_value => "errors.add(:tax, I18n.t('Must be numeric')) if tax.blank? or !(tax.is_a? Numeric) or (tax.present? && (tax.is_a? Numeric) && tax <= 0)
+                                            ")
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_accept_inline', 
                          :argument_value => "<%= f.input :accepted_date, :label => t('Accept Date'), :as => :string %>
                                              <%= f.input :accepted, :as => :hidden, :input_html => {:value => true} %>
                                            ")
-      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'validate_accept_submit', 
-                         :argument_value => "validates :accepted_date, :accepted, :presence => true
+      FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'validate_quote_accept', 
+                         :argument_value => "errors.add(:accepted_date, I18n.t('Not be blank')) if accepted_date.blank?
                                            ")
       FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_pdef_in_config', :argument_value => 'true')
       FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_route_in_config', :argument_value => 'true')
@@ -180,6 +179,39 @@ describe "LinkeTests" do
       click_link 'Open Process'
       page.should have_content('Quotes')
             
+    end
+    
+    it "should handle data error in wf" do
+      visit quotes_path
+      #save_and_open_page
+      #0
+      click_link 'Submit'
+      fill_in 'quote_wf_comment', :with => 'this line tests data failure'
+      fill_in 'quote_tax', :with => 0
+      #save_and_open_page
+      click_button 'Save'
+      #nil
+      visit quotes_path
+      #save_and_open_page
+      click_link 'Submit'
+      fill_in 'quote_wf_comment', :with => 'this line tests data failure'
+      fill_in 'quote_tax', :with => nil
+      #save_and_open_page
+      click_button 'Save'
+      #non numeric
+      visit quotes_path
+      #save_and_open_page
+      click_link 'Submit'
+      fill_in 'quote_wf_comment', :with => 'this line tests data failure'
+      fill_in 'quote_tax', :with => 'nil'
+      #save_and_open_page
+      click_button 'Save'
+      
+      visit quotes_path
+      click_link @quote.id.to_s
+      #save_and_open_page
+      page.should have_content('Quote Info')
+      page.should_not have_content('this line tests data failure')
     end
     
   end

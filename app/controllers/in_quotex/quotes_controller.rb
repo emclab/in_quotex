@@ -32,6 +32,7 @@ module InQuotex
       else
         @project_id = params[:quote][:project_id]
         @quote_task = InQuotex.task_class.find_by_id(params[:quote][:task_id]) if params[:quote].present? && params[:quote][:task_id].present?
+        @erb_code = find_config_const('quote_new_view', 'in_quotex')
         flash[:notice] = t('Data Error. Not Saved!')
         render 'new'
       end
@@ -54,6 +55,7 @@ module InQuotex
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
       else
         @qty_unit = find_config_const('piece_unit').split(',').map(&:strip)
+        @erb_code = find_config_const('quote_edit_view', 'in_quotex')
         flash[:notice] = t('Data Error. Not Updated!')
         render 'edit'
       end
