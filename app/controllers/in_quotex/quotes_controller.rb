@@ -8,6 +8,7 @@ module InQuotex
     def index
       @title = t('Quotes')
       @quotes = params[:in_quotex_quotes][:model_ar_r]  #returned by check_access_right
+      @quotes = @quotes.where(project_id: @project_id) if @project_id
       @quotes = @quotes.where(:task_id => InQuotex.task_class.where(:resource_id => params[:resource_id], :resource_string => params[:resource_string]).
                         select('id')) if params[:resource_id].present? && params[:resource_string].present?  #when event task is linked to quoted item
       @quotes = @quotes.where(:task_id => @quote_task.id) if @quote_task
@@ -74,7 +75,8 @@ module InQuotex
     
     protected
     def load_parent_record
-      @project_id = params[:project_id]
+      @project_id = params[:project_id].to_i if (params[:project_id].is_a? Numeric)
+      @project = InQuotex.project_class.find_by_id(@project_id) if @project_id
       @quote_task = InQuotex.task_class.find_by_id(params[:task_id]) if params[:task_id].present?
       @quote_task = InQuotex.task_class.find_by_id(InQuotex.task_class.find_by_id(params[:id]).id) if params[:id].present?
     end

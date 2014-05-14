@@ -36,7 +36,7 @@ describe "LinkeTests" do
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_submit_inline', 
                          :argument_value => "<%= f.input :tax, :label => t('Tax') %>")
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'validate_quote_submit', 
-                         :argument_value => "errors.add(:tax, I18n.t('Must be numeric')) if tax.blank? or !(tax.is_a? Numeric) or (tax.present? && (tax.is_a? Numeric) && tax <= 0)
+                         :argument_value => "errors.add(:tax, I18n.t('Must be numeric')) if !(tax.is_a? Numeric) or (tax.present? && (tax.is_a? Numeric) && tax <= 0)
                                             ")
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_accept_inline', 
                          :argument_value => "<%= f.input :accepted_date, :label => t('Accept Date'), :as => :string %>
