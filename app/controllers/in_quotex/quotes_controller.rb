@@ -76,7 +76,7 @@ module InQuotex
     
     protected
     def load_parent_record
-      @project_id = params[:project_id].to_i if (params[:project_id].is_a? Numeric)
+      @project_id = params[:project_id].to_i if params[:project_id].present?
       @project = InQuotex.project_class.find_by_id(@project_id) if @project_id
       @quote_task = InQuotex.task_class.find_by_id(params[:task_id]) if params[:task_id].present?
       @quote_task = InQuotex.task_class.find_by_id(InQuotex.task_class.find_by_id(params[:id]).id) if params[:id].present?
