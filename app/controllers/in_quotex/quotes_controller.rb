@@ -9,6 +9,7 @@ module InQuotex
       @title = t('Quotes')
       @quotes = params[:in_quotex_quotes][:model_ar_r]  #returned by check_access_right
       @quotes = @quotes.where(project_id: @project_id) if @project_id
+      @quotes = @quotes.where(task_id: @quote_task.id) if @quote_task
       @quotes = @quotes.where(:task_id => InQuotex.task_class.where(:resource_id => params[:resource_id], :resource_string => params[:resource_string]).
                         select('id')) if params[:resource_id].present? && params[:resource_string].present?  #when event task is linked to quoted item
       @quotes = @quotes.where(:task_id => @quote_task.id) if @quote_task
