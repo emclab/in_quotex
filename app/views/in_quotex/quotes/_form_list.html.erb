@@ -62,9 +62,9 @@
 	    <th>
 	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	    	<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action']  %>
-	    	<%= link_to t('New Quote'), SUBURI + "/authentify/view_handler?index=1&url=#{new_quote_path(:task_id => @quote_task.id, :parent_record_id => @quote_task.id, :project_id => @project_id, :parent_resource => InQuotex.task_class.to_s.underscore.pluralize)}", :class => BUTTONS_CLS['action']  if @project_id && @quote_task && has_action_right?('create', params[:controller], @quote_task) %>
-	    	<%= link_to t('Open Process'), SUBURI + "/authentify/view_handler?index=1&url=#{list_open_process_quotes_path(:task_id => @quote_task.id, :parent_record_id => @quote_task.id, :parent_resource => InQuotex.task_class.to_s.underscore.pluralize)}", :class => BUTTONS_CLS['action']  if @quote_task && has_action_right?('list_open_process', params[:controller], @quote_task) %>
-	    	<%= link_to t('Open Process'), SUBURI + "/authentify/view_handler?index=1&url=#{list_open_process_quotes_path}", :class => BUTTONS_CLS['action']  if @quote_task.nil? && has_action_right?('list_open_process', params[:controller], @quote_task) %>
+	    	<%= link_to t('New Quote'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape new_quote_path(:task_id => @quote_task.id, :parent_record_id => @quote_task.id, :project_id => @project_id, :parent_resource => InQuotex.task_class.to_s.underscore.pluralize)}", :class => BUTTONS_CLS['action']  if @project_id && @quote_task && has_action_right?('create', params[:controller], @quote_task) %>
+	    	<%= link_to t('Open Process'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape list_open_process_quotes_path(:task_id => @quote_task.id, :parent_record_id => @quote_task.id, :parent_resource => InQuotex.task_class.to_s.underscore.pluralize)}", :class => BUTTONS_CLS['action']  if @quote_task && has_action_right?('list_open_process', params[:controller], @quote_task) %>
+	    	<%= link_to t('Open Process'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape list_open_process_quotes_path}", :class => BUTTONS_CLS['action']  if @quote_task.nil? && has_action_right?('list_open_process', params[:controller], @quote_task) %>
 	    </th>
 	  </tr>
 	</table>
