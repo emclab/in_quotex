@@ -1,0 +1,72 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+  <% else %>
+<div class="pagination"><%= will_paginate models %></div>
+    <table class="table table-striped">
+		<tr>
+			<th>#</th>
+			<th><%= t('Quote Task') %></th>
+			<th><%= t('Quote Date') %></th>
+			<th><%= t('Product Name') %></th>
+			<th><%= t('Product Spec') %></th>
+			<th><%= t('Qty/Unit') %></th>
+			<th><%= t('Unit Price($/Unit)') %></th>		
+			<th><%= t('Shipping Cost') %></th>
+			<th><%= t('Other Cost') %></th>
+			<th><%= t('Quote Condition') %></th>
+			<th><%= t('Good For(day)') %></th>
+			<th><%= t('Supplier') %></th>
+			<th><%= t('WF State') %></th>
+			<th><%= t('Entered By') %></th>
+			<th><%= t('Last Updated By') %></th>
+			<th></th>
+			<th></th>
+			<th></th>
+		</tr>
+		<% models.each do |r| %>
+		  <tr>
+		  	<% if has_action_right?('show', params[:controller], r) %>
+		  	  <td><%=link_to r.id.to_s, SUBURI + "/authentify/view_handler?index=1&url=#{quote_path(r)}" %></td>
+		  	<% else %>
+		  	  <td><%= r.id %></td>
+		  	<% end %>
+		  	<% if has_action_right?('show', InQuotex.task_class.to_s.underscore, InQuotex.task_class.find_by_id(r.task_id))%>
+		  	<% else %>
+		  	  <td><%=link_to r.task_id.to_s, SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape eval(InQuotex.show_task_path)}" %></td>
+		  	<% end %>
+		  	<td><%= r.created_at.strftime("%Y/%m/%d") %></td>
+		  	<td><%= prt(r, :product_name) %></td>
+		  	<td><%= prt(r, :product_spec) %></td>
+		  	<td><%= prt(r, :qty) %><%= prt(r, :unit) %></td>
+			<td><%= prt(r, :unit_price) %></td>
+			<td><%= prt(r, :shipping_cost) %></td>
+			<td><%= prt(r, :other_cost) %></td>
+			<td><%= prt(r, :quote_condition) %></td>
+			<td><%= prt(r, :good_for_day) %></td>
+			<td><%= prt(r, 'supplier.name') %></td>
+			<td><%= t(prt(r, :wf_state).humanize.titleize) if r.wf_state.present? %></td>
+			<td><%= prt(r, 'entered_by.name') %></td> 
+			<td><%= prt(r, 'last_updated_by.name') %></td>    
+			<td><%= link_to t('Submit Quote'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'submit', :resource_id => r.id)}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'initial_state' && has_action_right?('submit', params[:controller], r) %></td>
+			<td><%= link_to t('Accept Quote'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'accept', :resource_id => r.id)}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'reviewing' && has_action_right?('accept', params[:controller], r) %></td>
+			<td><%= link_to t('Reject Quote'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI.escape event_action_quote_path(r, :wf_event => 'reject', :resource_id => r.id)}", :class => BUTTONS_CLS['action']  if r.wf_state.present? && r.wf_state == 'reviewing' && has_action_right?('reject', params[:controller], r) %></td>
+			<td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{edit_quote_path(r)}", :class => BUTTONS_CLS['action']  if (r.wf_state.nil? or r.wf_state == 'initial_state') && has_action_right?('update', params[:controller], r) %></td>
+			
+		  </tr>
+		<% end %>
+	</table>
+	
+	<table class="table table-striped">
+	  <tr>
+	    <th>
+	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action']  %>
+	    	<%= link_to t('New Quote'), SUBURI + "/authentify/view_handler?index=1&url=#{new_quote_path(:task_id => @quote_task.id, :parent_record_id => @quote_task.id, :project_id => @project_id, :parent_resource => InQuotex.task_class.to_s.underscore.pluralize)}", :class => BUTTONS_CLS['action']  if @project_id && @quote_task && has_action_right?('create', params[:controller], @quote_task) %>
+	    	<%= link_to t('Open Process'), SUBURI + "/authentify/view_handler?index=1&url=#{list_open_process_quotes_path(:task_id => @quote_task.id, :parent_record_id => @quote_task.id, :parent_resource => InQuotex.task_class.to_s.underscore.pluralize)}", :class => BUTTONS_CLS['action']  if @quote_task && has_action_right?('list_open_process', params[:controller], @quote_task) %>
+	    	<%= link_to t('Open Process'), SUBURI + "/authentify/view_handler?index=1&url=#{list_open_process_quotes_path}", :class => BUTTONS_CLS['action']  if @quote_task.nil? && has_action_right?('list_open_process', params[:controller], @quote_task) %>
+	    </th>
+	  </tr>
+	</table>
+
+<% end %>	
