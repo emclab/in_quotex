@@ -47,9 +47,10 @@ module InQuotex
     belongs_to :supplier, :class_name => InQuotex.supplier_class.to_s
     belongs_to :project, :class_name => InQuotex.project_class.to_s
    
-    validates :unit_price, :task_id, :qty, :supplier_id, :project_id, :presence => true,
+    validates :unit_price, :task_id, :qty, :supplier_id, :presence => true,
                                      :numericality => {:greater_than => 0}
     validates :product_spec, :unit, :product_name, :presence => true 
+    validates :project_id, :numericality => {:greater_than => 0}, :if => 'project_id.present?'
     validates :tax, :numericality => {:greater_than_or_equal_to => 0, :if => 'tax.present?'}
     validates :shipping_cost, :numericality => {:greater_than_or_equal_to => 0, :if => 'shipping_cost.present?'}
     validates :other_cost, :numericality => {:greater_than_or_equal_to => 0, :if => 'other_cost.present?'}

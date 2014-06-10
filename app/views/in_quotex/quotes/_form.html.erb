@@ -12,7 +12,7 @@
       <%= f.input :qty, :label => t('Qty') %> 
 	  <%= f.input :unit, :label => t('Qty Unit'), :collection => @qty_unit %>
 	  <%= f.input :lead_time_day, :label => t('Lead Time(day)'), :placeholder => '0,1,2...' %> 
-	  <%= f.input :unit_price, :label => t('Unit Price'), :readonly => true %>
+	  <%= f.input :unit_price, :label => t('Unit Price') %>
 	  <%= f.input :shipping_cost, :label => t('Shipping Cost'), :palceholder => 'x.xx or nothing' %>
 	  <%= f.input :other_cost, :label => t('Other Cost'), :palceholder => 'x.xx or nothing' %>
 	  <%= f.input :tax, :label => t('Tax'), :palceholder => 'x.xx or nothing' %>
