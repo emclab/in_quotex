@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   mount Searchx::Engine => '/search'
   mount ExtConstructionProjectx::Engine => '/project'
   mount EventTaskx::Engine => '/event_task'
+  mount Kustomerx::Engine => '/customer'
   
   resource :session
   

@@ -8,10 +8,10 @@ module InQuotex
     
     workflow do
       #self.to_s = 'EngineName::TableName'    ex, 'InQuotex::Quote'
-      wf = Authentify::AuthentifyUtility.find_config_const('quote_wf_pdef', 'in_quotex')
+      wf = Authentify::AuthentifyUtility.find_config_const('quote_wf_pdef', 'in_quotex')  #executed before loading FactoryGirl. pdef will be nil if pdef defined in FactoryGirl
       if Authentify::AuthentifyUtility.find_config_const('wf_pdef_in_config') == 'true' && wf.present?
          #quotes is table name
-        eval(wf) 
+        eval(wf)
       elsif Rails.env.test? #for rspec. loaded before FactoryGirl.
         state :initial_state do
           event :submit, :transitions_to => :reviewing
