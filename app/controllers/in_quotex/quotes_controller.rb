@@ -9,6 +9,7 @@ module InQuotex
       @title = t('Quotes')
       @quotes = params[:in_quotex_quotes][:model_ar_r]  #returned by check_access_right
       @quotes = @quotes.where(:task_id => @quote_task.id) if @quote_task
+      @quotes = @quotes.where(:wf_state => params[:wf_state].split(',')) if params[:wf_state]
       @quotes = @quotes.page(params[:page]).per_page(@max_pagination) 
       @erb_code = find_config_const('quote_index_view', 'in_quotex_quotes')
     end
