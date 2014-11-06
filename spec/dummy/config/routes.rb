@@ -1,12 +1,16 @@
 Rails.application.routes.draw do
 
-  get "user_menus/index"
-
   mount InQuotex::Engine => "/in_quotex"
   mount Authentify::Engine => "/authentify"
   mount Commonx::Engine => "/commonx"
-  mount InitEventTaskx::Engine => '/event_taskx'
+  mount InitEventTaskx::Engine => '/init_event_task'
   mount Supplierx::Engine => '/supplierx'
+  mount StateMachineLogx::Engine => '/sm_log'
+  mount BizWorkflowx::Engine => '/biz_wf'
+  mount Searchx::Engine => '/search'
+  mount ExtConstructionProjectx::Engine => '/project'
+  mount EventTaskx::Engine => '/event_task'
+  mount Kustomerx::Engine => '/customer'
   
   resource :session
   

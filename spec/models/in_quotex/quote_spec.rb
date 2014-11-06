@@ -7,6 +7,16 @@ module InQuotex
       c.should be_valid
     end
     
+    it "should reject nil product_name" do
+      c = FactoryGirl.build(:in_quotex_quote, :product_name => nil)
+      c.should_not be_valid
+    end
+    
+    it "should reject nil product spec" do
+      c = FactoryGirl.build(:in_quotex_quote, :product_spec => nil)
+      c.should_not be_valid
+    end
+    
     it "should reject nil qty" do
       c = FactoryGirl.build(:in_quotex_quote, :qty => nil)
       c.should_not be_valid
@@ -19,6 +29,16 @@ module InQuotex
     
     it "should reject 0 task_id" do
       c = FactoryGirl.build(:in_quotex_quote, :task_id => 0)
+      c.should_not be_valid
+    end
+    
+    it "should accept nil project_id" do
+      c = FactoryGirl.build(:in_quotex_quote, :project_id => nil)
+      c.should be_valid
+    end
+    
+    it "should reject 0 project_id" do
+      c = FactoryGirl.build(:in_quotex_quote, :project_id => 0)
       c.should_not be_valid
     end
     
