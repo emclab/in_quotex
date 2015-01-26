@@ -13,6 +13,7 @@ module InQuotex
       @quotes = @quotes.where(:task_id => InQuotex.task_class.where(:resource_id => params[:resource_id], :resource_string => params[:resource_string]).
                         select('id')) if params[:resource_id].present? && params[:resource_string].present?  #when event task is linked to quoted item
       @quotes = @quotes.where(:task_id => @quote_task.id) if @quote_task
+      @quotes = @quotes.where(:wf_state => params[:wf_state].split(',')) if params[:wf_state]
       @quotes = @quotes.page(params[:page]).per_page(@max_pagination) 
       @erb_code = find_config_const('quote_index_view', 'in_quotex')
     end
