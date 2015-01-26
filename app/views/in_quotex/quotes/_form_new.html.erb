@@ -21,7 +21,7 @@
 	  <%= f.input :good_for_day, :label => t('Good For(day)'), :placeholder => '0,1,2...' %>
 	  <%= f.input :quote_condition, :label => t('Quote Condition'), :input_html => {:rows => 4} %>
 	  <%= f.input :payment_term, :label => t('Payment Term'), :input_html => {:rows => 4} %>
-	  <%= f.input :supplier_id, :label => t('Supplier'), :collection => eval(InQuotex.return_suppliers), :include_blank => true %>
+	  <%= f.input :supplier_id, :label => t('Supplier'), :collection => InQuotex.supplier_class.where(active: true), :include_blank => true %>
 	  
 	  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
 	  <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %>  

@@ -39,11 +39,11 @@ describe "LinkeTests" do
                          :argument_value => "errors.add(:tax, I18n.t('Must be numeric')) if !(tax.is_a? Numeric) or (tax.present? && (tax.is_a? Numeric) && tax <= 0)
                                             ")
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'quote_accept_inline', 
-                         :argument_value => "<%= f.input :accepted_date, :label => t('Accept Date'), :as => :string %>
-                                             <%= f.input :accepted, :as => :hidden, :input_html => {:value => true} %>
+                         :argument_value => "<%= f.input :approved_date, :label => t('Accept Date'), :as => :string %>
+                                             <%= f.input :approved, :as => :hidden, :input_html => {:value => true} %>
                                            ")
       FactoryGirl.create(:engine_config, :engine_name => 'in_quotex', :engine_version => nil, :argument_name => 'validate_quote_accept', 
-                         :argument_value => "errors.add(:accepted_date, I18n.t('Not be blank')) if accepted_date.blank?
+                         :argument_value => "errors.add(:approved_date, I18n.t('Not be blank')) if approved_date.blank?
                                            ")
       FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_pdef_in_config', :argument_value => 'true')
       FactoryGirl.create(:engine_config, :engine_name => '', :engine_version => nil, :argument_name => 'wf_route_in_config', :argument_value => 'true')
@@ -100,13 +100,13 @@ describe "LinkeTests" do
       page.should have_content('Quotes')
       click_link 'Edit'
       page.should have_content('Update Quote')
-      save_and_open_page
+      #save_and_open_page
       fill_in 'quote_product_name', :with => 'a new name'
       fill_in 'quote_product_spec', :with => 'tree1234'
       fill_in 'quote_unit_price', :with => 100
       select('piece', :from => 'quote_unit')
       click_button 'Save'
-      save_and_open_page
+      #save_and_open_page
       #bad data
       visit quotes_path
       click_link 'Edit'
@@ -114,7 +114,7 @@ describe "LinkeTests" do
       fill_in 'quote_product_spec', :with => 'tree1234'
       fill_in 'quote_unit_price', :with => 0
       click_button 'Save'
-      save_and_open_page
+      #save_and_open_page
       
       visit quotes_path
       click_link @quote.id.to_s
@@ -132,7 +132,7 @@ describe "LinkeTests" do
       fill_in 'quote_qty', :with => 200
       select('piece', :from => 'quote_unit')
       click_button 'Save'
-      save_and_open_page
+      #save_and_open_page
       #bad data
       visit new_quote_path(:task_id => @q_task.id, :project_id => 1)
       page.should have_content('New Quote')
@@ -142,14 +142,14 @@ describe "LinkeTests" do
       fill_in 'quote_qty', :with => 200
       select('piece', :from => 'quote_unit')
       click_button 'Save'
-      save_and_open_page
+      #save_and_open_page
     end
     
     it "should work for workflow" do
       visit quotes_path
       #save_and_open_page
       click_link 'Submit'
-      save_and_open_page
+      #save_and_open_page
       fill_in 'quote_wf_comment', :with => 'this line tests workflow'
       fill_in 'quote_tax', :with => '10.00'
       #save_and_open_page
@@ -164,18 +164,18 @@ describe "LinkeTests" do
       visit quotes_path
       #save_and_open_page
       click_link 'Accept Quote'
-      save_and_open_page
+      #save_and_open_page
       fill_in 'quote_wf_comment', :with => 'this quote was accepted'
-      fill_in 'quote_accepted_date', :with => Date.today - 2.days
+      fill_in 'quote_approved_date', :with => Date.today - 2.days
       click_button 'Save'
       visit quotes_path
       click_link @quote.id.to_s
-      save_and_open_page
+      #save_and_open_page
       page.should have_content('this quote was accepted')
       page.should have_content((Date.today - 2.days).strftime("%Y/%m/%d"))
       
       visit quotes_path
-      save_and_open_page
+      #save_and_open_page
       click_link 'Open Process'
       page.should have_content('Quotes')
             

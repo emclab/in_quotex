@@ -25,20 +25,23 @@ module InQuotex
       end
     end
        
-    attr_accessor :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :wf_comment, :id_noupdate, :project_name, :wf_state_noupdate, :wf_event
+    attr_accessor :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :wf_comment, :id_noupdate, :project_name, :wf_state_noupdate, :wf_event,
+                  :category_name
     attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
-                    :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :entered_by_id,
+                    :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :entered_by_id, :category_id, :sub_category_id,
                     :task_name, :project_id, :quote_date, :product_name, :product_spec,
                     :as => :role_new
     attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
-                    :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :accepted, :accepted_date,
-                    :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :id_noupdate, :wf_comment, :project_name, :quote_date,
-                    :product_name, :product_spec, :wf_state_noupdate,
+                    :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :approved, :approved_date, :approved_by_id, :sub_category_id,
+                    :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :id_noupdate, :wf_comment, :project_name, :quote_date, :category_id, 
+                    :product_name, :product_spec, :wf_state_noupdate, :category_name,
                     :as => :role_update
     
-    attr_accessor :project_id_s, :start_date_s, :end_date_s, :customer_id_s, :void_s, :accepted_s, :time_frame_s, :supplier_id_s, :entered_by_id_s, :product_name_s
+    attr_accessor :project_id_s, :start_date_s, :end_date_s, :customer_id_s, :void_s, :approved_s, :time_frame_s, :supplier_id_s, :entered_by_id_s, :product_name_s,
+                  :category_id_s, :sub_category_id_s, :approved_by_id_s, :approved_s
 
     attr_accessible :project_id_s, :start_date_s, :end_date_s, :customer_id_s, :void_s, :accepted_s, :time_frame_s, :supplier_id_s, :entered_by_id_s, :product_name_s,
+                    :category_id_s, :sub_category_id_s, :approved_by_id_s, :approved_s,
                     :as => :role_search_stats
                                    
     belongs_to :task, :class_name => InQuotex.task_class.to_s
@@ -46,10 +49,16 @@ module InQuotex
     belongs_to :entered_by, :class_name => 'Authentify::User'
     belongs_to :supplier, :class_name => InQuotex.supplier_class.to_s
     belongs_to :project, :class_name => InQuotex.project_class.to_s
+    belongs_to :category, :class_name => InQuotex.category_class.to_s
+    belongs_to :sub_category, :class_name => InQuotex.sub_category_class.to_s
+    belongs_to :approved_by, :class_name => 'Authentify::User'
    
-    validates :unit_price, :task_id, :qty, :supplier_id, :presence => true,
+    validates :unit_price, :qty, :supplier_id, :presence => true,
                                      :numericality => {:greater_than => 0}
     validates :product_spec, :unit, :product_name, :presence => true 
+    validates :task_id, :numericality => {:greater_than => 0}, :if => 'task_id.present?'
+    validates :category_id, :numericality => {:greater_than => 0}, :if => 'category_id.present?'
+    validates :sub_category_id, :numericality => {:greater_than => 0}, :if => 'sub_category_id.present?'
     validates :project_id, :numericality => {:greater_than => 0}, :if => 'project_id.present?'
     validates :tax, :numericality => {:greater_than_or_equal_to => 0, :if => 'tax.present?'}
     validates :shipping_cost, :numericality => {:greater_than_or_equal_to => 0, :if => 'shipping_cost.present?'}

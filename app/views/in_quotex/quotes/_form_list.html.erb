@@ -33,7 +33,7 @@
 		  	<% end %>
 		  	<% if has_action_right?('show', InQuotex.task_class.to_s.underscore, InQuotex.task_class.find_by_id(r.task_id))%>
 		  	<% else %>
-		  	  <td><%=link_to r.task_id.to_s, SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape eval(InQuotex.show_task_path)}" %></td>
+		  	  <td><%=link_to r.task_id.to_s, SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape event_taskx.event_task_path(EventTaskx::EventTask.find_by_id(r.task_id))}" %></td>
 		  	<% end %>
 		  	<td><%= r.created_at.strftime("%Y/%m/%d") %></td>
 		  	<td><%= prt(r, :product_name) %></td>

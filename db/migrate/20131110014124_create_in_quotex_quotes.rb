@@ -4,7 +4,7 @@ class CreateInQuotexQuotes < ActiveRecord::Migration
       
       t.string :product_name
       t.text :product_spec
-      t.integer :quote_date
+      t.date :quote_date
       t.integer :task_id
       t.integer :last_updated_by_id
       t.string :wf_state
@@ -25,18 +25,23 @@ class CreateInQuotexQuotes < ActiveRecord::Migration
       t.boolean :void, :default => false
       t.integer :entered_by_id
       t.integer :project_id
-      t.boolean :accepted, :default => false
-      t.date :accepted_date
-      
+      t.boolean :approved, :default => false
+      t.date :approved_date     
       t.timestamps
+      t.integer :category_id
+      t.integer :sub_category_id
+      t.integer :approved_by_id
     end
     
     add_index :in_quotex_quotes, :task_id
     add_index :in_quotex_quotes, :project_id
     add_index :in_quotex_quotes, :supplier_id
     add_index :in_quotex_quotes, :wf_state
-    add_index :in_quotex_quotes, :accepted
+    add_index :in_quotex_quotes, :approved
     add_index :in_quotex_quotes, :void
     add_index :in_quotex_quotes, :product_name
+    add_index :in_quotex_quotes, :quote_date
+    add_index :in_quotex_quotes, :category_id
+    add_index :in_quotex_quotes, :approved_by_id
   end
 end

@@ -67,12 +67,12 @@
   <%= @quote.other_cost %>
 </p>
 <p>
-  <b><%= t('Accepted') %></b>
-  <%= @quote.accepted ? t('Yes') : t('No') %>
+  <b><%= t('Approved') %></b>
+  <%= @quote.approved ? t('Yes') : t('No') %>
 </p>
 <p>
-  <b><%= t('Accepte Date') %></b>
-  <%= @quote.accepted_date.strftime("%Y/%m/%d") if @quote.accepted_date.present? %>
+  <b><%= t('Approve Date') %></b>
+  <%= @quote.approved_date.strftime("%Y/%m/%d") if @quote.approved_date.present? %>
 </p>
 <p>
   <b><%= t('WF State') %>:</b>
