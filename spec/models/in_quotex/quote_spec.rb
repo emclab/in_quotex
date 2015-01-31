@@ -27,6 +27,11 @@ module InQuotex
       c.should_not be_valid
     end
     
+    it "should reject 0 mfg_id" do
+      c = FactoryGirl.build(:in_quotex_quote, :mfg_id => 0)
+      c.should_not be_valid
+    end
+    
     it "should reject 0 task_id" do
       c = FactoryGirl.build(:in_quotex_quote, :task_id => 0)
       c.should_not be_valid

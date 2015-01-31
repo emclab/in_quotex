@@ -31,6 +31,8 @@ class CreateInQuotexQuotes < ActiveRecord::Migration
       t.integer :category_id
       t.integer :sub_category_id
       t.integer :approved_by_id
+      t.integer :mfg_id
+      t.string :brand
     end
     
     add_index :in_quotex_quotes, :task_id
@@ -43,5 +45,7 @@ class CreateInQuotexQuotes < ActiveRecord::Migration
     add_index :in_quotex_quotes, :quote_date
     add_index :in_quotex_quotes, :category_id
     add_index :in_quotex_quotes, :approved_by_id
+    add_index :in_quotex_quotes, :brand
+    add_index :in_quotex_quotes, :mfg_id
   end
 end

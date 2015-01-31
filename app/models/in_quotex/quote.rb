@@ -26,22 +26,22 @@ module InQuotex
     end
        
     attr_accessor :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :wf_comment, :id_noupdate, :project_name, :wf_state_noupdate, :wf_event,
-                  :category_name
+                  :category_name, :mfg_name
     attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
                     :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :entered_by_id, :category_id, :sub_category_id,
-                    :task_name, :project_id, :quote_date, :product_name, :product_spec,
+                    :task_name, :project_id, :quote_date, :product_name, :product_spec, :brand, :mfg_id, :mfg_name,
                     :as => :role_new
     attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
                     :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :approved, :approved_date, :approved_by_id, :sub_category_id,
                     :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :id_noupdate, :wf_comment, :project_name, :quote_date, :category_id, 
-                    :product_name, :product_spec, :wf_state_noupdate, :category_name,
+                    :product_name, :product_spec, :wf_state_noupdate, :category_name, :brand, :mfg_id, :mfg_name,
                     :as => :role_update
     
     attr_accessor :project_id_s, :start_date_s, :end_date_s, :customer_id_s, :void_s, :approved_s, :time_frame_s, :supplier_id_s, :entered_by_id_s, :product_name_s,
-                  :category_id_s, :sub_category_id_s, :approved_by_id_s, :approved_s
+                  :category_id_s, :sub_category_id_s, :approved_by_id_s, :approved_s, :brand_s, :mfg_id_s
 
     attr_accessible :project_id_s, :start_date_s, :end_date_s, :customer_id_s, :void_s, :accepted_s, :time_frame_s, :supplier_id_s, :entered_by_id_s, :product_name_s,
-                    :category_id_s, :sub_category_id_s, :approved_by_id_s, :approved_s,
+                    :category_id_s, :sub_category_id_s, :approved_by_id_s, :approved_s, :brand_s, :mfg_id_s,
                     :as => :role_search_stats
                                    
     belongs_to :task, :class_name => InQuotex.task_class.to_s
@@ -52,6 +52,7 @@ module InQuotex
     belongs_to :category, :class_name => InQuotex.category_class.to_s
     belongs_to :sub_category, :class_name => InQuotex.sub_category_class.to_s
     belongs_to :approved_by, :class_name => 'Authentify::User'
+    belongs_to :mfg, :class_name => InQuotex.mfg_class.to_s
    
     validates :unit_price, :qty, :supplier_id, :presence => true,
                                      :numericality => {:greater_than => 0}
@@ -60,6 +61,7 @@ module InQuotex
     validates :category_id, :numericality => {:greater_than => 0}, :if => 'category_id.present?'
     validates :sub_category_id, :numericality => {:greater_than => 0}, :if => 'sub_category_id.present?'
     validates :project_id, :numericality => {:greater_than => 0}, :if => 'project_id.present?'
+    validates :mfg_id, :numericality => {:greater_than => 0}, :if => 'mfg_id.present?'
     validates :tax, :numericality => {:greater_than_or_equal_to => 0, :if => 'tax.present?'}
     validates :shipping_cost, :numericality => {:greater_than_or_equal_to => 0, :if => 'shipping_cost.present?'}
     validates :other_cost, :numericality => {:greater_than_or_equal_to => 0, :if => 'other_cost.present?'}
