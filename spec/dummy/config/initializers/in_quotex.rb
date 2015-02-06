@@ -7,3 +7,4 @@ InQuotex.customer_class = 'Kustomerx::Customer'
 InQuotex.category_class = 'Commonx::MiscDefinition'  #parking
 InQuotex.sub_category_class = 'Commonx::MiscDefinition'  #parking
 InQuotex.mfg_class = 'Commonx::MiscDefinition' #parking
+InQuotex.product_class = 'Commonx::MiscDefinition' #parking

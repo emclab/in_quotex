@@ -1,0 +1,18 @@
+<% if @view_in_config && @js_erb_code %>
+  <%= render inline: ERB.new(@js_erb_code).result(binding) %>
+  
+<% else %>
+
+<% if params[:quote][:field_changed] == 'product_name' %>
+  <% part = InQuotex.product_class.find_by_name(params[:quote][:product_name].strip) if params[:quote][:product_name].present? %>
+  <% if part.present? %>
+    $('#quote_product_spec').val("<%=part.spec %>");
+    $('#quote_unit').val("<%=part.unit %>");
+  <% else %>
+    $('#quote_product_spec').val("");
+    $('#quote_unit').val("");
+  <% end %>
+  $('#quote_field_changed').val('');
+<% end %>
+
+<% end %>

@@ -21,7 +21,7 @@ module InQuotex
     def new
       @title = t('New Quote')
       @quote = InQuotex::Quote.new()
-      @qty_unit = find_config_const('piece_unit').split(',').map(&:strip)
+      @qty_unit = find_config_const('piece_unit').split(',').map(&:strip) if find_config_const('piece_unit').present?
       @erb_code = find_config_const('quote_new_view', 'in_quotex')
     end
   
@@ -44,7 +44,7 @@ module InQuotex
     def edit
       @title = t('Update Quote')
       @quote = InQuotex::Quote.find_by_id(params[:id])
-      @qty_unit = find_config_const('piece_unit').split(',').map(&:strip)
+      @qty_unit = find_config_const('piece_unit').split(',').map(&:strip) if find_config_const('piece_unit').present?
       @erb_code = find_config_const('quote_edit_view', 'in_quotex')
       if @quote.wf_state.present? && @quote.current_state != :initial_state
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=NO Update. Record Being Processed!")
@@ -57,7 +57,7 @@ module InQuotex
       if @quote.update_attributes(params[:quote], :as => :role_update)
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
       else
-        @qty_unit = find_config_const('piece_unit').split(',').map(&:strip)
+        @qty_unit = find_config_const('piece_unit').split(',').map(&:strip) if find_config_const('piece_unit').present?
         @erb_code = find_config_const('quote_edit_view', 'in_quotex')
         flash[:notice] = t('Data Error. Not Updated!')
         render 'edit'

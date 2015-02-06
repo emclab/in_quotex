@@ -9,16 +9,16 @@ gemspec
 gem "jquery-rails", "~> 2.3.0"
 gem "will_paginate"
 
-gem 'authentify', :path => '../authentify'  #for rspec test
-gem 'commonx', :path => '../commonx'
-gem 'init_event_taskx', :path => '../init_event_taskx'
-gem 'supplierx', :path => '../supplierx'
-gem 'state_machine_logx', :path => '../state_machine_logx'
-gem 'biz_workflowx', :path => '../biz_workflowx'
-gem 'event_taskx', :path => '../event_taskx'
-gem 'ext_construction_projectx', :path => '../ext_construction_projectx'
-gem 'kustomerx', :path => '../kustomerx'
-gem 'searchx', :path => '../searchx'
+gem 'authentify', :path => '../authentify', branch: '3.2.12.01'  #for rspec test
+gem 'commonx', :path => '../commonx', branch: '3.2.12.01'
+gem 'init_event_taskx', :path => '../init_event_taskx', branch: '3.2.12.01'
+gem 'supplierx', :path => '../supplierx', branch: '3.2.12.01'
+gem 'state_machine_logx', :path => '../state_machine_logx', branch: '3.2.12.01'
+gem 'biz_workflowx', :path => '../biz_workflowx', branch: '3.2.12.01'
+gem 'event_taskx', :path => '../event_taskx', branch: '3.2.12.01'
+gem 'ext_construction_projectx', :path => '../ext_construction_projectx', branch: '3.2.12.01'
+gem 'kustomerx', :path => '../kustomerx', branch: '3.2.12.01'
+gem 'searchx', :path => '../searchx', branch: '3.2.12.01'
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or
