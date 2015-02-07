@@ -14,7 +14,7 @@ $(function() {
 
 $(function() {
   $('#quote_product_name').change(function (){
-  	$('#quote_field_changed').val('product_name);
+  	$('#quote_field_changed').val('product_name');
     $.get(window.location, $('form').serialize(), null, "script");
     return false;
   });
