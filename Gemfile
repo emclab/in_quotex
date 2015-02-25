@@ -6,19 +6,22 @@ source "https://rubygems.org"
 gemspec
 
 # jquery-rails is used by the dummy application
-gem "jquery-rails", "~> 2.3.0"
+gem "jquery-rails" #, "~> 2.3.0"
 gem "will_paginate"
+gem 'tzinfo-data', platforms: [:mingw_20, :mingw, :mswin]
+gem 'protected_attributes'  #for rails 4
+gem 'factory_girl_rails' #rails 4.2
 
-gem 'authentify', :path => '../authentify', branch: '3.2.12.01'  #for rspec test
-gem 'commonx', :path => '../commonx', branch: '3.2.12.01'
-gem 'init_event_taskx', :path => '../init_event_taskx', branch: '3.2.12.01'
-gem 'supplierx', :path => '../supplierx', branch: '3.2.12.01'
-gem 'state_machine_logx', :path => '../state_machine_logx', branch: '3.2.12.01'
-gem 'biz_workflowx', :path => '../biz_workflowx', branch: '3.2.12.01'
-gem 'event_taskx', :path => '../event_taskx', branch: '3.2.12.01'
-gem 'ext_construction_projectx', :path => '../ext_construction_projectx', branch: '3.2.12.01'
-gem 'kustomerx', :path => '../kustomerx', branch: '3.2.12.01'
-gem 'searchx', :path => '../searchx', branch: '3.2.12.01'
+gem 'authentify', :path => '../authentify', branch: '4.2.0'  #for rspec test
+gem 'commonx', :path => '../commonx', branch: '4.2.0'
+gem 'init_event_taskx', :path => '../init_event_taskx', branch: '4.2.0'
+gem 'supplierx', :path => '../supplierx', branch: '4.2.0'
+gem 'state_machine_logx', :path => '../state_machine_logx', branch: '4.2.0'
+gem 'biz_workflowx', :path => '../biz_workflowx', branch: '4.2.0'
+gem 'event_taskx', :path => '../event_taskx', branch: '4.2.0'
+gem 'ext_construction_projectx', :path => '../ext_construction_projectx', branch: '4.2.0'
+gem 'kustomerx', :path => '../kustomerx', branch: '4.2.0'
+gem 'searchx', :path => '../searchx', branch: '4.2.0'
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or

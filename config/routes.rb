@@ -3,8 +3,6 @@ InQuotex::Engine.routes.draw do
     collection do
       get :search
       get :search_results
-      #get :stats
-      #put :stats_results    
     end
 #=begin
     workflow_routes = Authentify::AuthentifyUtility.find_config_const('quote_wf_route', 'in_quotex')  #nil if route defined in FactoryGirl which is loaded after route is loaded.

@@ -1,10 +1,11 @@
-require 'spec_helper'
+require 'rails_helper'
 
 module InQuotex
-  describe QuotesController do
+  RSpec.describe QuotesController, type: :controller do
+    routes {InQuotex::Engine.routes}
     before(:each) do
-      controller.should_receive(:require_signin)
-      controller.should_receive(:require_employee)
+      expect(controller).to receive(:require_signin)
+      expect(controller).to receive(:require_employee)
       @pagination_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'pagination', :argument_value => 30)
       engine_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'piece_unit', :argument_value => "t('set'), t('piece')")
     end
@@ -50,8 +51,8 @@ module InQuotex
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task.id)
         q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
-        get 'index', {:use_route => :in_quotex}
-        assigns(:quotes).should =~ [q, q1]
+        get 'index'
+        expect(assigns(:quotes)).to match_array([q, q1])
       end
       
       it "should only return the quotes which belongs to the quote task" do
@@ -61,8 +62,8 @@ module InQuotex
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task.id)
         q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
-        get 'index', {:use_route => :in_quotex, :task_id => @q_task1.id}
-        assigns(:quotes).should =~ [q1]
+        get 'index', {:task_id => @q_task1.id}
+        expect(assigns(:quotes)).to match_array([q1])
       end
       
       it "should only return the quotes which belongs to resource_id/resource_string" do       
@@ -74,8 +75,8 @@ module InQuotex
         q_task1 = FactoryGirl.create(:event_taskx_event_task, :resource_id => 1, :resource_string => 'quotex/quotes')
         q = FactoryGirl.create(:in_quotex_quote, :task_id => q_task.id)
         q1 = FactoryGirl.create(:in_quotex_quote, :task_id => q_task1.id)
-        get 'index', {:use_route => :in_quotex, :resource_id => q_task1.resource_id, :resource_string => 'quotex/quotes'}
-        assigns(:quotes).should =~ [q1]
+        get 'index', {:resource_id => q_task1.resource_id, :resource_string => 'quotex/quotes'}
+        expect(assigns(:quotes)).to match_array([q1])
       end
     end
   
@@ -85,8 +86,8 @@ module InQuotex
         :sql_code => "")
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
-        get 'new', {:use_route => :in_quotex, :task_id => @q_task.id}
-        response.should be_success
+        get 'new', {:task_id => @q_task.id}
+        expect(response).to be_success
       end
     end
   
@@ -97,8 +98,8 @@ module InQuotex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.attributes_for(:in_quotex_quote, :task_id => @q_task1.id)
-        get 'create', {:use_route => :in_quotex, :task_id => @q_task1.id, :quote => q}
-        response.should redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
+        get 'create', {:task_id => @q_task1.id, :quote => q}
+        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
       end
       
       it "should render new with data error" do
@@ -107,8 +108,8 @@ module InQuotex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.attributes_for(:in_quotex_quote, :task_id => @q_task1.id, :unit_price => 0)
-        get 'create', {:use_route => :in_quotex, :task_id => @q_task1.id, :quote => q}
-        response.should render_template('new')
+        get 'create', {:task_id => @q_task1.id, :quote => q}
+        expect(response).to render_template('new')
       end
     end
   
@@ -119,8 +120,8 @@ module InQuotex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => '')
-        get 'edit', {:use_route => :in_quotex, :id => q.id}
-        response.should be_success
+        get 'edit', {:id => q.id}
+        expect(response).to be_success
       end
       
       it "should redirect to previous page for an open process" do
@@ -129,8 +130,8 @@ module InQuotex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'reviewing')  
-        get 'edit', {:use_route => :in_quotex, :id => q.id}
-        response.should redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=NO Update. Record Being Processed!")
+        get 'edit', {:id => q.id}
+        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=NO Update. Record Being Processed!")
       end
     end
   
@@ -141,8 +142,8 @@ module InQuotex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
-        get 'update', {:use_route => :in_quotex, :id => q.id, :quote => {:qty => 20}}
-        response.should redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
+        get 'update', {:id => q.id, :quote => {:qty => 20}}
+        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
       end
       
       it "should render edit with data error" do
@@ -151,8 +152,8 @@ module InQuotex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
-        get 'update', {:use_route => :in_quotex, :id => q.id, :quote => {:qty => 0}}
-        response.should render_template('edit')
+        get 'update', {:id => q.id, :quote => {:qty => 0}}
+        expect(response).to render_template('edit')
       end
     end
   
@@ -163,8 +164,8 @@ module InQuotex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :entered_by_id => @u.id, :supplier_id => @supplier.id)
-        get 'show', {:use_route => :in_quotex, :id => q.id }
-        response.should be_success
+        get 'show', {:id => q.id }
+        expect(response).to be_success
       end
     end
     
@@ -179,8 +180,8 @@ module InQuotex
         q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'reviewing')
         q2 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'initial_state')
         q3 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'rejected')  #wf_state can't be what was defined.
-        get 'list_open_process', {:use_route => :in_quotex}
-        assigns(:quotes).should =~ [q1, q2]
+        get 'list_open_process'
+        expect(assigns(:quotes)).to match_array([q1, q2])
       end
     end
   end

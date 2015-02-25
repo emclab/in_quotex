@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "LinkeTests" do
+RSpec.describe "LinkeTests", type: :request do
   describe "GET /in_quotex_linke_tests" do
     mini_btn = 'btn btn-mini '
     ActionView::CompiledTemplates::BUTTONS_CLS =
@@ -95,11 +95,11 @@ describe "LinkeTests" do
     
     it "works! (now write some real specs)" do
       
-      visit quotes_path
+      visit in_quotex.quotes_path
       save_and_open_page
-      page.should have_content('Quotes')
+      expect(page).to have_content('Quotes')
       click_link 'Edit'
-      page.should have_content('Update Quote')
+      expect(page).to have_content('Update Quote')
       #save_and_open_page
       fill_in 'quote_product_name', :with => 'a new name'
       fill_in 'quote_product_spec', :with => 'tree1234'
@@ -108,7 +108,7 @@ describe "LinkeTests" do
       click_button 'Save'
       #save_and_open_page
       #bad data
-      visit quotes_path
+      visit in_quotex.quotes_path
       click_link 'Edit'
       fill_in 'quote_product_name', :with => 'a new name'
       fill_in 'quote_product_spec', :with => 'tree1234'
@@ -116,16 +116,16 @@ describe "LinkeTests" do
       click_button 'Save'
       #save_and_open_page
       
-      visit quotes_path
+      visit in_quotex.quotes_path
       click_link @quote.id.to_s
       #save_and_open_page
-      page.should have_content('Quote Info')
-      #page.should have_content('this line tests workflow')
+      expect(page).to have_content('Quote Info')
+      #expect(page).to have_content('this line tests workflow')
       click_link 'New Log'
-      page.should have_content('Log')
+      expect(page).to have_content('Log')
       
-      visit new_quote_path(:task_id => @q_task.id, :project_id => 1)
-      page.should have_content('New Quote')
+      visit in_quotex.new_quote_path(:task_id => @q_task.id, :project_id => 1)
+      expect(page).to have_content('New Quote')
       fill_in 'quote_product_name', :with => 'a new name'
       fill_in 'quote_product_spec', :with => 'tree1234'
       fill_in 'quote_unit_price', :with => 100
@@ -134,8 +134,8 @@ describe "LinkeTests" do
       click_button 'Save'
       #save_and_open_page
       #bad data
-      visit new_quote_path(:task_id => @q_task.id, :project_id => 1)
-      page.should have_content('New Quote')
+      visit in_quotex.new_quote_path(:task_id => @q_task.id, :project_id => 1)
+      expect(page).to have_content('New Quote')
       fill_in 'quote_product_name', :with => ''
       fill_in 'quote_product_spec', :with => 'tree1234'
       fill_in 'quote_unit_price', :with => 0
@@ -146,7 +146,7 @@ describe "LinkeTests" do
     end
     
     it "should work for workflow" do
-      visit quotes_path
+      visit in_quotex.quotes_path
       #save_and_open_page
       click_link 'Submit'
       #save_and_open_page
@@ -155,34 +155,35 @@ describe "LinkeTests" do
       #save_and_open_page
       click_button 'Save'
       #
-      visit quotes_path
+      visit in_quotex.quotes_path
       click_link @quote.id.to_s
-      #save_and_open_page
-      page.should have_content('Quote Info')
-      page.should have_content('this line tests workflow')
+      save_and_open_page
+      expect(page).to have_content('Quote Info')
+      expect(page).to have_content('this line tests workflow')
       #accept quote
-      visit quotes_path
+
+      visit in_quotex.quotes_path
       #save_and_open_page
       click_link 'Accept Quote'
       #save_and_open_page
       fill_in 'quote_wf_comment', :with => 'this quote was accepted'
       fill_in 'quote_approved_date', :with => Date.today - 2.days
       click_button 'Save'
-      visit quotes_path
+      visit in_quotex.quotes_path
       click_link @quote.id.to_s
       #save_and_open_page
-      page.should have_content('this quote was accepted')
-      page.should have_content((Date.today - 2.days).strftime("%Y/%m/%d"))
+      expect(page).to have_content('this quote was accepted')
+      expect(page).to have_content((Date.today - 2.days).strftime("%Y/%m/%d"))
       
-      visit quotes_path
+      visit in_quotex.quotes_path
       #save_and_open_page
       click_link 'Open Process'
-      page.should have_content('Quotes')
+      expect(page).to have_content('Quotes')
             
     end
     
     it "should handle data error in wf" do
-      visit quotes_path
+      visit in_quotex.quotes_path
       #save_and_open_page
       #0
       click_link 'Submit'
@@ -191,7 +192,7 @@ describe "LinkeTests" do
       #save_and_open_page
       click_button 'Save'
       #nil
-      visit quotes_path
+      visit in_quotex.quotes_path
       #save_and_open_page
       click_link 'Submit'
       fill_in 'quote_wf_comment', :with => 'this line tests data failure'
@@ -199,7 +200,7 @@ describe "LinkeTests" do
       #save_and_open_page
       click_button 'Save'
       #non numeric
-      visit quotes_path
+      visit in_quotex.quotes_path
       #save_and_open_page
       click_link 'Submit'
       fill_in 'quote_wf_comment', :with => 'this line tests data failure'
@@ -207,11 +208,11 @@ describe "LinkeTests" do
       #save_and_open_page
       click_button 'Save'
       
-      visit quotes_path
+      visit in_quotex.quotes_path
       click_link @quote.id.to_s
       #save_and_open_page
-      page.should have_content('Quote Info')
-      page.should_not have_content('this line tests data failure')
+      expect(page).to have_content('Quote Info')
+      expect(page).not_to have_content('this line tests data failure')
     end
     
   end
