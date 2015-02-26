@@ -152,7 +152,7 @@ RSpec.describe "LinkeTests", type: :request do
       #save_and_open_page
       fill_in 'quote_wf_comment', :with => 'this line tests workflow'
       fill_in 'quote_tax', :with => '10.00'
-      #save_and_open_page
+      save_and_open_page
       click_button 'Save'
       #
       visit in_quotex.quotes_path

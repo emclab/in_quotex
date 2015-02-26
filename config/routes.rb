@@ -11,9 +11,9 @@ InQuotex::Engine.routes.draw do
     elsif Rails.env.test?  #for rsepc. routes loaded before FactoryGirl.
       member do
         get :event_action
-        put :accept
-        put :reject
-        put :submit
+        patch :accept
+        patch :reject
+        patch :submit
       end
       
       collection do

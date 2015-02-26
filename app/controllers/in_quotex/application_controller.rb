@@ -1,13 +1,13 @@
 module InQuotex
-  class ApplicationController < ::ApplicationController
+  class InQuotex::ApplicationController < ::ApplicationController
     include Authentify::SessionsHelper
     include Authentify::AuthentifyUtility
     include Authentify::UsersHelper
     include Authentify::UserPrivilegeHelper
     include Commonx::CommonxHelper
     include Searchx::SearchHelper
-    include BizWorkflowx::WfHelper
-    
+    include ::BizWorkflowx::WfHelper
+
     before_action :require_signin
     before_action :max_pagination
     before_action :check_access_right 
