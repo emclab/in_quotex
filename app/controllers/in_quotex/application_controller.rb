@@ -6,7 +6,8 @@ module InQuotex
     include Authentify::UserPrivilegeHelper
     include Commonx::CommonxHelper
     include Searchx::SearchHelper
-    include ::BizWorkflowx::WfHelper
+    include BizWorkflowx::WfHelper
+    
 
     before_action :require_signin
     before_action :max_pagination
