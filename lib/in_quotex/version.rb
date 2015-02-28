@@ -1,3 +1,3 @@
 module InQuotex
-  VERSION = "3.2.12.18"
+  VERSION = "01"
 end
