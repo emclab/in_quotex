@@ -39,6 +39,7 @@ module InQuotex
       @q_task1 = FactoryGirl.create(:event_taskx_event_task, :name => 'a new name')
       @supplier = FactoryGirl.create(:supplierx_supplier)
       
+      session[:user_role_ids] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id).user_role_ids
     end
     
     render_views
@@ -48,7 +49,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'index', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "InQuotex::Quote.where(:void => false).order('created_at DESC')")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task.id)
         q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
         get 'index'
@@ -59,7 +59,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'index', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "InQuotex::Quote.where(:void => false).order('created_at DESC')")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task.id)
         q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
         get 'index', {:task_id => @q_task1.id}
@@ -70,7 +69,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'index', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "InQuotex::Quote.where(:void => false).order('created_at DESC')")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q_task = FactoryGirl.create(:event_taskx_event_task, :resource_id => 1, :resource_string => 'rfqx/rfqs')
         q_task1 = FactoryGirl.create(:event_taskx_event_task, :resource_id => 1, :resource_string => 'quotex/quotes')
         q = FactoryGirl.create(:in_quotex_quote, :task_id => q_task.id)
@@ -85,7 +83,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'create', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         get 'new', {:task_id => @q_task.id}
         expect(response).to be_success
       end
@@ -96,7 +93,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'create', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.attributes_for(:in_quotex_quote, :task_id => @q_task1.id)
         get 'create', {:task_id => @q_task1.id, :quote => q}
         expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
@@ -106,7 +102,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'create', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.attributes_for(:in_quotex_quote, :task_id => @q_task1.id, :unit_price => 0)
         get 'create', {:task_id => @q_task1.id, :quote => q}
         expect(response).to render_template('new')
@@ -118,7 +113,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'update', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => '')
         get 'edit', {:id => q.id}
         expect(response).to be_success
@@ -128,7 +122,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'update', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'reviewing')  
         get 'edit', {:id => q.id}
         expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=NO Update. Record Being Processed!")
@@ -140,7 +133,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'update', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
         get 'update', {:id => q.id, :quote => {:qty => 20}}
         expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
@@ -150,7 +142,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'update', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
         get 'update', {:id => q.id, :quote => {:qty => 0}}
         expect(response).to render_template('edit')
@@ -162,7 +153,6 @@ module InQuotex
         user_access = FactoryGirl.create(:user_access, :action => 'show', :resource =>'in_quotex_quotes', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "record.entered_by_id == session[:user_id]")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :entered_by_id => @u.id, :supplier_id => @supplier.id)
         get 'show', {:id => q.id }
         expect(response).to be_success
@@ -175,7 +165,6 @@ module InQuotex
         :sql_code => "InQuotex::Quote.where(:void => false).order('created_at DESC')")
         
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task.id, :created_at => 50.days.ago, :wf_state => 'initial_state')
         q1 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'reviewing')
         q2 = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'initial_state')
