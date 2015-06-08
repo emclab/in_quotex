@@ -2,7 +2,7 @@
   <%= render inline: ERB.new(@erb_code).result(binding) %>
   
 <% else %>
-<div id="main_body">
+
 <h4><%=t('Quote Info') %></h4>
 
 <p>
@@ -111,6 +111,6 @@
         </th>
 	  </tr>
 	</table>    	
-</div>
+
 
 <% end %>
