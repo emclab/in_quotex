@@ -7,11 +7,11 @@ require "in_quotex/version"
 Gem::Specification.new do |s|
   s.name        = "in_quotex"
   s.version     = InQuotex::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of InQuotex."
-  s.description = "TODO: Description of InQuotex."
+  s.authors     = ["Your name"]
+  s.email       = ["Your@email.com"]
+  s.homepage    = "http://home.com"
+  s.summary     = "Summary of InQuotex."
+  s.description = "Description of InQuotex."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]

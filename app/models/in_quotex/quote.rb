@@ -27,23 +27,7 @@ module InQuotex
        
     attr_accessor :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :wf_comment, :id_noupdate, :project_name, :wf_state_noupdate, :wf_event,
                   :category_name, :mfg_name, :field_changed
-    attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
-                    :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :entered_by_id, :category_id, :sub_category_id,
-                    :task_name, :project_id, :quote_date, :product_name, :product_spec, :brand, :mfg_id, :mfg_name, :field_changed,
-                    :as => :role_new
-    attr_accessible :good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
-                    :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :approved, :approved_date, :approved_by_id, :sub_category_id,
-                    :void_noupdate, :entered_by_noupdate, :last_updated_by_noupdate, :task_name, :id_noupdate, :wf_comment, :project_name, :quote_date, :category_id, 
-                    :product_name, :product_spec, :wf_state_noupdate, :category_name, :brand, :mfg_id, :mfg_name, :field_changed,
-                    :as => :role_update
-    
-    attr_accessor :project_id_s, :start_date_s, :end_date_s, :customer_id_s, :void_s, :approved_s, :time_frame_s, :supplier_id_s, :entered_by_id_s, :product_name_s,
-                  :category_id_s, :sub_category_id_s, :approved_by_id_s, :approved_s, :brand_s, :mfg_id_s
-
-    attr_accessible :project_id_s, :start_date_s, :end_date_s, :customer_id_s, :void_s, :accepted_s, :time_frame_s, :supplier_id_s, :entered_by_id_s, :product_name_s,
-                    :category_id_s, :sub_category_id_s, :approved_by_id_s, :approved_s, :brand_s, :mfg_id_s,
-                    :as => :role_search_stats
-                                   
+       
     belongs_to :task, :class_name => InQuotex.task_class.to_s
     belongs_to :last_updated_by, :class_name => 'Authentify::User'
     belongs_to :entered_by, :class_name => 'Authentify::User'

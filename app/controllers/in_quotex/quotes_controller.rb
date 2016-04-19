@@ -26,12 +26,12 @@ module InQuotex
     end
   
     def create
-      @quote = InQuotex::Quote.new(params[:quote], :as => :role_new)
+      @quote = InQuotex::Quote.new(new_params)
       @quote.last_updated_by_id = session[:user_id]
       @quote.entered_by_id = session[:user_id]
       #@quote.task_id = @quote_task.id
       if @quote.save
-        redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
+        redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Saved!")
       else
         @project_id = params[:quote][:project_id]
         @quote_task = InQuotex.task_class.find_by_id(params[:quote][:task_id]) if params[:quote].present? && params[:quote][:task_id].present?
@@ -47,15 +47,15 @@ module InQuotex
       @qty_unit = find_config_const('piece_unit').split(',').map(&:strip) if find_config_const('piece_unit').present?
       @erb_code = find_config_const('quote_edit_view', 'in_quotex')
       if @quote.wf_state.present? && @quote.current_state != :initial_state
-        redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=NO Update. Record Being Processed!")
+        redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=NO Update. Record Being Processed!")
       end
     end
   
     def update
       @quote = InQuotex::Quote.find_by_id(params[:id])
       @quote.last_updated_by_id = session[:user_id]
-      if @quote.update_attributes(params[:quote], :as => :role_update)
-        redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
+      if @quote.update_attributes(edit_params)
+        redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Updated!")
       else
         @qty_unit = find_config_const('piece_unit').split(',').map(&:strip) if find_config_const('piece_unit').present?
         @erb_code = find_config_const('quote_edit_view', 'in_quotex')
@@ -83,5 +83,18 @@ module InQuotex
       @quote_task = InQuotex.task_class.find_by_id(InQuotex::Quote.find_by_id(params[:id]).id) if params[:id].present?
     end
     
+    private
+    
+    def new_params
+      params.require(:quote).permit(:good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
+                    :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :entered_by_id, :category_id, :sub_category_id,
+                    :project_id, :quote_date, :product_spec, :brand, :mfg_id)
+    end
+    
+    def edit_params
+      params.require(:quote).permit(:good_for_day, :last_updated_by_id, :lead_time_day, :other_cost, :payment_term, :qty, :quote_condition, :shipping_cost, :wf_state, 
+                    :supplier_contact, :supplier_id, :supplier_quote_num, :task_id, :tax, :unit, :unit_price, :void, :approved, :approved_date, :approved_by_id, :sub_category_id,
+                    :quote_date, :category_id, :product_spec, :brand, :mfg_id)
+    end
   end
 end

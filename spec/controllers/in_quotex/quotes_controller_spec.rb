@@ -95,7 +95,7 @@ module InQuotex
         session[:user_id] = @u.id
         q = FactoryGirl.attributes_for(:in_quotex_quote, :task_id => @q_task1.id)
         get 'create', {:task_id => @q_task1.id, :quote => q}
-        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
+        expect(response).to redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Saved!")
       end
       
       it "should render new with data error" do
@@ -124,7 +124,7 @@ module InQuotex
         session[:user_id] = @u.id
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id, :wf_state => 'reviewing')  
         get 'edit', {:id => q.id}
-        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=NO Update. Record Being Processed!")
+        expect(response).to redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=NO Update. Record Being Processed!")
       end
     end
   
@@ -135,7 +135,7 @@ module InQuotex
         session[:user_id] = @u.id
         q = FactoryGirl.create(:in_quotex_quote, :task_id => @q_task1.id)
         get 'update', {:id => q.id, :quote => {:qty => 20}}
-        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
+        expect(response).to redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Updated!")
       end
       
       it "should render edit with data error" do
